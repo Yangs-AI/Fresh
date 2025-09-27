@@ -1,2 +1,5 @@
-# Research-Hub
-The Research Hub serves as the central entry point to the Yangs-AI Research Ecosystem.
+# Fresh
+
+Friendly RESearch RESources Hub
+
+Making research resources easy to find, reuse, and share — documenting assets for reproducible research.
