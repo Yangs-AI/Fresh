@@ -5,8 +5,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Fresh',
+  tagline: 'Friendly Research Resources Hub',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -15,15 +15,15 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://fresh.research.jason-young.me',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'Yangs-AI', // Usually your GitHub org/user name.
+  projectName: 'Fresh', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -37,34 +37,50 @@ const config: Config = {
 
   presets: [
     [
-      'classic',
+      '@docusaurus/preset-classic',
       {
-        docs: {
-          sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        docs: false,
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
       } satisfies Preset.Options,
+    ],
+  ],
+
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'memo',
+        path: 'memo',
+        editUrl: 'https://github.com/Yangs-AI/Fresh/tree/main/FreshDocs/memo',
+        sidebarPath: './sidebarsMemo.ts',
+        routeBasePath: 'memo',
+        disableVersioning: false,
+      }
+    ],
+    [
+      '@docusaurus/plugin-content-blog',
+      {
+        id: 'news',
+        path: 'news',
+        editUrl: 'https://github.com/Yangs-AI/Fresh/tree/main/FreshDocs/news',
+        blogTitle: 'News',
+        routeBasePath: 'news',
+        showReadingTime: true,
+        blogDescription: 'Information about Research Team of Yangs-AI',
+        blogSidebarTitle: 'All News',
+        feedOptions: {
+          type: ['rss', 'atom'],
+          xslt: true,
+          title: 'Fresh News',
+          description: 'Information about Research Team of Yangs-AI',
+        },
+        onInlineTags: 'warn',
+        onInlineAuthors: 'warn',
+        onUntruncatedBlogPosts: 'warn',
+      }
     ],
   ],
 
@@ -75,21 +91,26 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'My Site',
+      title: 'Fresh',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'Friendly Research Resources Hub',
         src: 'img/logo.svg',
       },
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'memoSidebar',
+          docsPluginId: 'memo',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Memo',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          to: '/news',
+          label: 'News',
+          position: 'left'
+        },
+        {
+          href: 'https://github.com/Yangs-AI/Fresh',
           label: 'GitHub',
           position: 'right',
         },
@@ -102,8 +123,21 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/intro',
+              label: 'Memo',
+              to: '/memo',
+            },
+          ],
+        },
+        {
+          title: 'Interests',
+          items: [
+            {
+              label: 'News',
+              to: '/news',
+            },
+            {
+              label: 'GitHub',
+              href: 'https://github.com/Yangs-AI/News',
             },
           ],
         },
@@ -111,38 +145,26 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
+              label: 'GitHub Discussion',
+              href: 'https://github.com/Yangs-AI/Fresh/discussions',
             },
           ],
         },
         {
-          title: 'More',
+          title: 'Related Sites',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              label: 'Jason Young',
+              href: 'https://jason-young.me',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Yangs.AI. Built with Docusaurus.`,
     },
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
+      theme: prismThemes.oceanicNext,
+      darkTheme: prismThemes.duotoneDark,
     },
   } satisfies Preset.ThemeConfig,
 };
