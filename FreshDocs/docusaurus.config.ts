@@ -157,10 +157,14 @@ const config: Config = {
               label: 'Jason Young',
               href: 'https://jason-young.me',
             },
+            {
+              label: 'Yangs AI',
+              href: 'https://yangs.ai',
+            },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Yangs.AI. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} <a href="https://yangs.ai" class="glass-button">Yangs AI</a>. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.oceanicNext,
