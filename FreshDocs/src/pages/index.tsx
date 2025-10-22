@@ -10,7 +10,7 @@ export default function Home(): ReactNode {
   return (
     <Layout
       title={`Friendly Research Resources Hub`}
-      description="Description will go into a meta tag in <head />">
+      description="Making research resources easy to find, reuse, and share - documenting assets for reproducible research.">
       <HomePageHeader />
       <main>
         <HomePageFeatures />
