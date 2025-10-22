@@ -54,7 +54,7 @@ const config: Config = {
       {
         id: 'memo',
         path: 'memo',
-        editUrl: 'https://github.com/Yangs-AI/Fresh/tree/main/FreshDocs/memo',
+        editUrl: 'https://github.com/Yangs-AI/Fresh/tree/main/FreshDocs',
         sidebarPath: './sidebarsMemo.ts',
         routeBasePath: 'memo',
         disableVersioning: false,
@@ -65,7 +65,7 @@ const config: Config = {
       {
         id: 'news',
         path: 'news',
-        editUrl: 'https://github.com/Yangs-AI/Fresh/tree/main/FreshDocs/news',
+        editUrl: 'https://github.com/Yangs-AI/Fresh/tree/main/FreshDocs',
         blogTitle: 'News',
         routeBasePath: 'news',
         showReadingTime: true,
