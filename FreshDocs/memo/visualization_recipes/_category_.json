@@ -1,0 +1,8 @@
+{
+  "label": "Visualization Recipes",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Reusable visualization recipes for experimental data, crafted to present results more effectively. Each recipe includes the expected data format, visualization code, figure output, and design notes."
+  }
+}
