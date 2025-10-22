@@ -18,10 +18,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: FreshDocs/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -32,7 +34,7 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build
+          path: FreshDocs/build
 
       - name: Deploy to Server
         uses: easingthemes/ssh-deploy@main
@@ -42,7 +44,7 @@ jobs:
           # 复制操作的参数。"-avzr --delete"意味部署时清空服务器目标目录下的文件
           ARGS: "-avz --delete"
           # 源目录
-          SOURCE: "./build/"
+          SOURCE: "./FreshDocs/build/"
           # 部署目标主机
           REMOTE_HOST: ${{ secrets.HOST }}
           # 部署目标主机端口
