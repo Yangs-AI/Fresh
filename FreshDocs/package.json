@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "statistics": "node scripts/statistics.mjs"
+    "statistics": "tsx scripts/statistics.ts",
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
@@ -28,8 +28,9 @@
     "@docusaurus/module-type-aliases": "^3.9.2",
     "@docusaurus/tsconfig": "^3.9.2",
     "@docusaurus/types": "^3.9.2",
+    "tsx": "^4.19.3",
     "typescript": "~5.6.2",
-    "gray-matter": "^4.0.3",
+    "gray-matter": "^4.0.3"
   },
   "browserslist": {
     "production": [

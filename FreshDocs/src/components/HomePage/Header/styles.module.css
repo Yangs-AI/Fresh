@@ -1,23 +1,213 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
-
 .heroBanner {
-  padding: 4rem 0;
-  text-align: center;
   position: relative;
+  padding: 6rem 0 5rem;
+  text-align: center;
+  color: var(--ifm-hero-text-color);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(255,255,255,0.30), rgba(255,255,255,0) 60%),
+    radial-gradient(900px 500px at 110% 10%, rgba(255,255,255,0.12), rgba(255,255,255,0) 65%),
+    linear-gradient(160deg, var(--ifm-color-primary-lightest) 0%, var(--ifm-color-primary) 55%, var(--ifm-color-primary-darker) 100%);
+  box-shadow: inset 0 -40px 80px rgba(0,0,0,0.12);
+  overflow: hidden;
+  font-family: var(--ifm-font-family-base);
+}
+
+html[data-theme='dark'] .heroBanner {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%),
+    radial-gradient(900px 500px at 110% 10%, rgba(255,255,255,0.04), rgba(255,255,255,0) 65%),
+    linear-gradient(160deg, #1a1323 0%, #231a35 55%, #2d1d45 100%);
+  box-shadow: inset 0 -40px 100px rgba(0,0,0,0.5);
+}
+
+.heroBanner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px;
+  background-position: center;
+  opacity: 0.20;
+  pointer-events: none;
+}
+
+.heroInner { position: relative; z-index: 1; }
+
+.hero__title {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 5vw, 3.25rem);
+  animation: fadeInUp .8s ease both;
+}
+
+.hero__subtitle {
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  opacity: .92;
+  margin: .75rem 0 2rem;
+  animation: fadeInUp 1s ease both;
+}
+
+.ctaRow {
+  display: flex; align-items: center; justify-content: center; gap: .75rem;
+}
+
+.buttonPrimary {
+  padding: .5rem 1rem;
+  border-radius: .7rem;
+  font-weight: 500;
+}
+html[data-theme='dark'] .buttonPrimary:hover { transform: translateY(-1px); }
+
+.buttonGhost {
+  background: transparent;
+  border: 2px solid rgba(147, 51, 234, 0.4);
+  color: var(--ifm-hero-text-color);
+  border-radius: .7rem;
+  padding: .5rem 1rem;
+  transition: background .2s ease, transform .15s ease, box-shadow .25s ease;
+}
+.buttonGhost:hover {
+  background: rgba(147, 51, 234, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(147, 51, 234, 0.35);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.heroBanner.heroGlass {
+  position: relative;
+  padding: 6rem 0 5rem;
+  text-align: center;
+  color: var(--ifm-hero-text-color);
+  background:
+    radial-gradient(1200px 600px at 0% -20%, rgba(255,255,255,0.22), rgba(255,255,255,0) 60%),
+    linear-gradient(160deg, var(--ifm-color-primary-lightest) 0%, var(--ifm-color-primary) 55%, var(--ifm-color-primary-darker) 100%);
   overflow: hidden;
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+html[data-theme='dark'] .heroBanner.heroGlass {
+  background:
+    radial-gradient(1100px 600px at 0% -20%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%),
+    linear-gradient(160deg, #161522 0%, #1e1c31 55%, #151426 100%);
 }
 
-.buttons {
+.glassPanel {
+  margin: 0 auto;
+  max-width: 880px;
+  padding: 2rem 1.75rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 12px 50px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(2px) saturate(180%);
+  -webkit-backdrop-filter: blur(2px) saturate(180%);
+  transition: transform 0.5s ease, box-shadow 0.6s ease;
+}
+.glassPanel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 55px rgba(0, 0, 0, 0.25);
+}
+
+html[data-theme='dark'] .glassPanel {
+  background: rgba(25, 25, 35, 0.4);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.heroInner { position: relative; z-index: 1; }
+
+.hero__title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 5vw, 3.1rem);
+  margin: 0 0 .35rem 0;
+}
+
+.hero__subtitle {
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  opacity: .92;
+  margin: 0 0 1.75rem 0;
+}
+
+.ctaRow {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.buttonPrimary {
+  padding: .55rem 1.05rem;
+  border-radius: .75rem;
+  font-weight: 500;
+}
+.buttonGhost {
+  background: transparent;
+  border: 2px solid rgba(147, 51, 234, 0.35);
+  color: var(--ifm-hero-text-color);
+  border-radius: .75rem;
+  padding: .55rem 1.05rem;
+  transition: background .2s ease, transform .15s ease, box-shadow .25s ease;
+}
+.buttonGhost:hover {
+  background: rgba(147, 51, 234, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(147, 51, 234, 0.35);
+}
+
+.heroWrapper { position: relative; isolation: isolate; }
+
+.heroWrapper::before{
+  content:"";
+  position:absolute;
+
+  /* 关键：向四周外扩 + 放大，旋转后也不露边 */
+  inset: -20vmax;
+
+  pointer-events:none; z-index:0;
+
+  background-image:var(--fresh-bg);
+  background-repeat:repeat;
+  background-size:var(--tileW) var(--tileH);
+  background-position:center;
+
+  /* 在 CSS 层整体旋转，避免 tile 内旋转带来的拼缝 */
+  transform: rotate(var(--fresh-angle, -32deg)) scale(var(--fresh-scale, 1.6));
+  transform-origin: center;
+
+  /* 柔和融合 */
+  mix-blend-mode: soft-light;
+  opacity:.9;
+
+  /* 可选：羽化边缘，避免外扩区域在极端布局下显边 */
+  -webkit-mask-image: radial-gradient(170% 170% at 50% 50%, #000 72%, transparent 98%);
+          mask-image: radial-gradient(170% 170% at 50% 50%, #000 72%, transparent 98%);
+}
+
+html[data-theme='dark'] .heroWrapper::before {
+  color: rgba(255,255,255,0.08);
+}
+
+[data-animate="fade-up"] {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.9s ease forwards;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
