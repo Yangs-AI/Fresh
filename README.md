@@ -1,7 +1,11 @@
-# Fresh
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Yangs-AI/Fresh/refs/heads/main/FreshDocs/static/img/logo.svg" alt="Fresh Logo" width="160"/>
+</p>
 
-**F**riendly **RES**earch **RES**ources **H**ub  
-*Making research resources easy to find, reuse, and share — documenting assets for reproducible research.*
+<h1 align="center">Fresh</h1>
+
+<p align="center"><b>F</b>riendly <b>RES</b>earch <b>RES</b>ources <b>H</b>ub</p>
+<p align="center"><i>Making research resources easy to find, reuse, and share — documenting assets for reproducible research.</i></p>
 
 ---
 
