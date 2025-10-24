@@ -4,4 +4,75 @@ title: Welcome to Fresh
 description: Fresh aims to capture and organize the general-purpose practical tools, reusable visualization methods, and other relevant resources involved in daily scientific research activities, facilitating more efficient research workflows.
 ---
 
-# Welcome to **Fresh**
+
+Welcome to **Fresh**, a living archive that collects recurring ideas and reusable modules emerging from everyday research.
+
+{/* truncate */}
+
+---
+
+## Motivation 🌿
+
+Every research project produces a stream of tiny yet crucial by-products: snippets of automation, scripts for data collection, or quick visualizations that reveal data distributions.
+Yet most of them vanish into private folders, never reaching the visibility they deserve.
+
+**Memo** exists to **preserve** and **circulate** these fragments.
+It transforms transient experiments into **reusable, citable, and evolving** knowledge artifacts.
+
+---
+
+## Structure 🧩
+
+Memo is organized into several volumes.  
+Currently, it includes *Visualization* and *Miscellaneous*, with *Reference*, *Table*, and *Algorithm* volumes planned for the future.
+
+
+```mdx-code-block
+
+import DocCardList from '@theme/DocCardList';
+
+<DocCardList
+  items={[
+    {
+      type: 'link',
+      label: 'Visualization Recipes',
+      href: '/memo/visualization_recipes',
+      description: 'Minimal, reproducible visual storytelling recipes.'
+    },
+    {
+      type: 'link',
+      label: 'Miscellaneous Recipes',
+      href: '/memo/miscellaneous_recipes',
+      description: 'Lightweight utilities, fetchers, and automation snippets.'
+    }
+  ]}
+/>
+
+```
+
+### Visualization
+Code snippets for scientific **visual storytelling**.
+These recipes provide minimal, reproducible examples that illustrate how to visualize complex data with clarity and elegance, complete with explicit input/output specifications.
+
+### Miscellaneous
+Utilities and helper tools that simplify research workflows.
+From data fetchers like *[OpenReview Fetcher](./miscellaneous_recipes/openreview_fetcher)* to lightweight automation scripts and one-off analyses, each entry is self-contained, tested, and easily adaptable for new purposes.
+
+---
+
+## Philosophy 💡
+
+Memo is not a static documentation site but a **living notebook**, where practicality meets reflection.
+Each entry is both a **tool** and a **trace of thought**, embodying the **Fresh** vision that research infrastructure and creative process are inseparable.
+
+---
+
+## Contribution & Growth 🤝
+
+We invite you to:
+
+- fork or adapt existing memos for your own experiments
+- expand them into full-scale projects within the Fresh ecosystem
+- or simply use them as _seeds_ of inspiration
+
+**Memo grows not by accumulation, but by resonance.**
