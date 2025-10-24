@@ -110,7 +110,7 @@ html[data-theme='dark'] .card:hover {
 
 @media (max-width: 768px) {
   .iconWrap { width: 128px; height: 128px; }
-  .featureSvg { width: 34px; height: 34px; }
+  .featureSvg { width: 120px; height: 120px; }
 }
 
 @media (max-width: 576px) {
