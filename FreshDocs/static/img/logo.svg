@@ -7,8 +7,11 @@
    viewBox="0 0 125 125"
    version="1.1"
    id="svg1"
-   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
    sodipodi:docname="FRESH.svg"
+   inkscape:export-filename="FRESH.png"
+   inkscape:export-xdpi="143.54672"
+   inkscape:export-ydpi="143.54672"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -25,13 +28,13 @@
      inkscape:document-units="mm"
      showgrid="true"
      inkscape:zoom="1.4378367"
-     inkscape:cx="246.2032"
-     inkscape:cy="300.79911"
+     inkscape:cx="246.55095"
+     inkscape:cy="279.58669"
      inkscape:window-width="1920"
-     inkscape:window-height="1009"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
+     inkscape:window-height="957"
+     inkscape:window-x="0"
+     inkscape:window-y="31"
+     inkscape:window-maximized="0"
      inkscape:current-layer="layer1">
     <inkscape:grid
        type="modular"
@@ -61,78 +64,48 @@
      id="layer1">
     <g
        id="g15"
-       transform="translate(-0.41213617,0.36802974)"
+       transform="translate(-1.6754354,0.36802974)"
        inkscape:label="Fresh">
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24.0832px;font-family:DubaiWeb;-inkscape-font-specification:DubaiWeb;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:none;stroke-width:2.072;stroke-dasharray:none"
-         x="8.9422407"
-         y="133.32715"
+      <path
+         style="font-size:27.2584px;font-family:Dubai;-inkscape-font-specification:Dubai;fill:#4b345a;stroke:#4b345a;stroke-width:2"
+         d="m 21.428605,125.7837 h -8.53188 v 5.94233 h 7.441544 l -0.272584,2.12615 h -7.16896 v 7.4688 h -2.507772 v -17.66344 h 11.039652 z"
          id="text10"
-         transform="scale(1.120438,0.8925081)"
-         inkscape:label="F"><tspan
-           sodipodi:role="line"
-           id="tspan10"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DubaiWeb;-inkscape-font-specification:DubaiWeb;fill:#4b345a;fill-opacity:1;stroke:#4b345a;stroke-width:2.072;stroke-dasharray:none;stroke-opacity:1"
-           x="8.9422407"
-           y="133.32715">F</tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.3654px;font-family:DubaiWeb;-inkscape-font-specification:DubaiWeb;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:none;stroke-width:1.92382;stroke-dasharray:none"
-         x="32.111233"
-         y="122.59364"
+         inkscape:label="F"
+         transform="scale(1.1775621,0.84921211)"
+         aria-label="F" />
+      <path
+         style="font-size:25.0125px;font-family:Dubai;-inkscape-font-specification:Dubai;fill:#4b345a;stroke:#4b345a;stroke-width:2"
+         d="m 44.41718,129.52665 v 0.15008 h -2.651325 l -4.677338,-6.32817 h -2.4012 v 6.32817 h -2.30115 v -16.2081 h 5.277638 q 1.90095,0 3.2016,0.6003 1.325662,0.6003 1.975988,1.67583 0.675337,1.07554 0.675337,2.50125 0,1.15058 -0.450225,2.12607 -0.425212,0.97548 -1.30065,1.70085 -0.875438,0.70035 -2.176088,1.02551 z m -9.729863,-8.07904 h 2.626313 q 1.875937,0 2.826412,-0.8004 0.975488,-0.82541 0.975488,-2.30115 0,-1.42571 -0.90045,-2.17608 -0.875438,-0.75038 -2.6013,-0.75038 h -2.926463 z"
          id="text10-8"
-         transform="scale(1.0295978,0.97125304)"
-         inkscape:label="R"><tspan
-           sodipodi:role="line"
-           id="tspan10-8"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DubaiWeb;-inkscape-font-specification:DubaiWeb;fill:#4b345a;fill-opacity:1;stroke:#4b345a;stroke-width:1.92382;stroke-dasharray:none;stroke-opacity:1"
-           x="32.111233"
-           y="122.59364">R</tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:23.9571px;font-family:DubaiWeb;-inkscape-font-specification:DubaiWeb;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#4b345a;stroke-width:2.06072;stroke-dasharray:none;fill-opacity:1"
-         x="49.943584"
-         y="132.53189"
+         inkscape:label="R"
+         transform="scale(1.0805357,0.92546688)"
+         aria-label="R" />
+      <path
+         style="font-size:27.0918px;font-family:Dubai;-inkscape-font-specification:Dubai;fill:#4b345a;stroke:#4b345a;stroke-width:2"
+         d="m 51.840595,138.34387 h 8.615192 v 2.11316 H 49.348149 v -17.55549 h 10.972179 v 2.11316 h -8.479733 v 5.47255 h 7.423153 l -0.270918,2.05898 h -7.152235 z"
          id="text10-8-5"
-         transform="scale(1.1137042,0.89790449)"
-         inkscape:label="E"><tspan
-           sodipodi:role="line"
-           id="tspan10-8-1"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DubaiWeb;-inkscape-font-specification:DubaiWeb;fill:#4b345a;fill-opacity:1;stroke:#4b345a;stroke-width:2.06072;stroke-dasharray:none;stroke-opacity:1"
-           x="49.943584"
-           y="132.53189">E</tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.1764px;font-family:DubaiWeb;-inkscape-font-specification:DubaiWeb;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:none;stroke-width:1.90755;stroke-dasharray:none"
-         x="75.482864"
-         y="125.65664"
+         inkscape:label="E"
+         transform="scale(1.1703631,0.85443569)"
+         aria-label="E" />
+      <path
+         style="font-size:24.7686px;font-family:Dubai;-inkscape-font-specification:Dubai;fill:#4b345a;stroke:#4b345a;stroke-width:2"
+         d="m 78.33215,133.16864 q -1.733802,0 -3.195149,-0.47061 -1.461348,-0.49537 -2.575935,-1.36227 l 1.089819,-1.63473 q 0.990744,0.76783 2.229174,1.16413 1.263199,0.37153 2.377786,0.37153 1.783339,0 2.699777,-0.64399 0.941207,-0.64398 0.941207,-1.95672 0,-0.76782 -0.346761,-1.2632 -0.321991,-0.49537 -1.089818,-0.89166 -0.743058,-0.42107 -2.154868,-0.91644 l -0.421066,-0.14861 q -1.560422,-0.54491 -2.526398,-1.06505 -0.965975,-0.54491 -1.560422,-1.41181 -0.594446,-0.86691 -0.594446,-2.17964 0,-1.38704 0.743058,-2.32825 0.767827,-0.96598 2.006257,-1.43658 1.23843,-0.4706 2.65024,-0.4706 1.486116,0 2.798852,0.37153 1.337504,0.37153 2.600703,1.21366 l -1.040281,1.63473 q -1.089819,-0.69352 -2.105331,-0.99075 -1.015513,-0.32199 -2.278712,-0.32199 -1.312735,0 -2.179636,0.54491 -0.866902,0.54491 -0.866902,1.68426 0,0.59445 0.272455,1.04029 0.297223,0.44583 0.990744,0.84213 0.71829,0.3963 1.981488,0.84213 l 0.421066,0.14861 q 1.659497,0.56968 2.650241,1.08982 0.990744,0.49537 1.709033,1.46135 0.718289,0.9412 0.718289,2.45209 0,1.51088 -0.718289,2.55116 -0.718289,1.01552 -2.055794,1.56043 -1.337504,0.52014 -3.170381,0.52014 z"
          id="text10-8-5-5"
-         transform="scale(1.057485,0.94563989)"
-         inkscape:label="S"><tspan
-           sodipodi:role="line"
-           id="tspan10-8-1-2"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DubaiWeb;-inkscape-font-specification:DubaiWeb;fill:#4b345a;fill-opacity:1;stroke:#4b345a;stroke-width:1.90755;stroke-dasharray:none;stroke-opacity:1"
-           x="75.482864"
-           y="125.65664">S</tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.2346px;font-family:DubaiWeb;-inkscape-font-specification:DubaiWeb;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ff0000;stroke-width:1.827;stroke-dasharray:none"
-         x="104.63858"
-         y="115.6436"
+         inkscape:label="S"
+         transform="scale(1.1096322,0.90119951)"
+         aria-label="S" />
+      <path
+         style="font-size:23.563px;font-family:Dubai;-inkscape-font-specification:Dubai;fill:#4b345a;stroke:#4b345a;stroke-width:2"
+         d="m 112.06229,106.89308 h 2.16779 v 15.26882 h -2.16779 v -6.85683 h -8.43556 v 6.85683 h -2.16779 v -15.26882 h 2.16779 v 6.57408 h 8.43556 z"
          id="text10-8-5-5-4"
-         transform="scale(0.97083165,1.0300447)"
-         inkscape:label="H"><tspan
-           sodipodi:role="line"
-           id="tspan10-8-1-2-2"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DubaiWeb;-inkscape-font-specification:DubaiWeb;fill:#4b345a;fill-opacity:1;stroke:#4b345a;stroke-width:1.827;stroke-dasharray:none;stroke-opacity:1"
-           x="104.63858"
-           y="115.6436">H</tspan></text>
+         inkscape:label="H"
+         transform="scale(1.0179182,0.98239719)"
+         aria-label="H" />
     </g>
     <g
        id="g17"
        inkscape:label="FRESH"
-       transform="translate(0,-1.472119)">
+       transform="translate(-0.3677247,-1.472119)">
       <g
          id="g16"
          inkscape:label="F00110">
