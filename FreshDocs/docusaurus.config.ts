@@ -49,6 +49,23 @@ const config: Config = {
   ],
 
   plugins: [
+    function htmlAssetPlugin() {
+      return {
+        name: 'html-asset-plugin',
+        configureWebpack() {
+          return {
+            module: {
+              rules: [
+                {
+                  test: /\.html$/i,
+                  type: 'asset/resource',
+                },
+              ],
+            },
+          };
+        },
+      };
+    },
     [
       '@docusaurus/plugin-content-docs',
       {
