@@ -172,7 +172,6 @@ html[data-theme='dark'] .glassPanel {
   content:"";
   position:absolute;
 
-  /* 关键：向四周外扩 + 放大，旋转后也不露边 */
   inset: -20vmax;
 
   pointer-events:none; z-index:0;
@@ -182,15 +181,12 @@ html[data-theme='dark'] .glassPanel {
   background-size:var(--tileW) var(--tileH);
   background-position:center;
 
-  /* 在 CSS 层整体旋转，避免 tile 内旋转带来的拼缝 */
   transform: rotate(var(--fresh-angle, -32deg)) scale(var(--fresh-scale, 1.6));
   transform-origin: center;
 
-  /* 柔和融合 */
   mix-blend-mode: soft-light;
   opacity:.9;
 
-  /* 可选：羽化边缘，避免外扩区域在极端布局下显边 */
   -webkit-mask-image: radial-gradient(170% 170% at 50% 50%, #000 72%, transparent 98%);
           mask-image: radial-gradient(170% 170% at 50% 50%, #000 72%, transparent 98%);
 }
