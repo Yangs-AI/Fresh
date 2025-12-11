@@ -46,14 +46,14 @@ If you have a useful visualization snippet, LaTeX code, or writing assets, you c
    ```bash
    git clone https://github.com/<your-username>/Fresh.git
    ```
-3. Enter the documentation workspace and install dependencies:
+3. **Create a new branch** for your contribution:
+   ```bash
+   git checkout -b new-feature
+   ```
+4. Enter the documentation workspace and install dependencies:
    ```bash
    cd FreshDocs
    npm install
-   ```
-4. **Create a new branch** for your contribution:
-   ```bash
-   git checkout -b new-feature
    ```
 5. **Add your new content** under the appropriate directory, e.g.:
    ```
