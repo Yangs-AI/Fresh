@@ -46,11 +46,16 @@ If you have a useful visualization snippet, LaTeX code, or writing assets, you c
    ```bash
    git clone https://github.com/<your-username>/Fresh.git
    ```
-3. **Create a new branch** for your contribution:
+3. Enter the documentation workspace and install dependencies:
+   ```bash
+   cd FreshDocs
+   npm install
+   ```
+4. **Create a new branch** for your contribution:
    ```bash
    git checkout -b new-feature
    ```
-4. **Add your new content** under the appropriate directory, e.g.:
+5. **Add your new content** under the appropriate directory, e.g.:
    ```
    FreshDocs/memo/visualization_recipes/vilion_plot/
    ```
@@ -58,13 +63,24 @@ If you have a useful visualization snippet, LaTeX code, or writing assets, you c
    - `README.md` describing usage and references
    - Example code
    - Citation or original source if applicable
-5. **Commit and push** your changes:
+6. Preview your contribution locally to ensure it builds correctly:
+   ```bash
+   npm run start
+   ```
+   This command launches a local Docusaurus development server so you can check that your new content renders properly.
+7. Commit and push your changes:
    ```bash
    git add .
    git commit -m "Add: new visualization component for dataset analysis"
    git push origin new-feature
    ```
-6. **Open a Pull Request** back to `main`:
+8. **Commit and push** your changes:
+   ```bash
+   git add .
+   git commit -m "Add: new visualization component for dataset analysis"
+   git push origin new-feature
+   ```
+9. **Open a Pull Request** back to `main`:
    - Provide a short, descriptive title.
    - Include context and reference if relevant.
 
@@ -90,12 +106,6 @@ Fresh is maintained by **Yangs-AI Research Group**,
 with ongoing support from collaborators and community contributors.
 
 ---
-
-<!-- ## License
-
-Released under the **MIT License**, open for reuse and adaptation with attribution.
-
---- -->
 
 ## A Fresh Beginning
 
