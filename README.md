@@ -50,7 +50,7 @@ If you have a useful visualization snippet, LaTeX code, or writing assets, you c
    ```bash
    git checkout -b new-feature
    ```
-4. Enter the documentation workspace and install dependencies:
+4. Enter the documentation workspace and install dependencies (For more details, see [Guide](./FreshDocs/README.md):
    ```bash
    cd FreshDocs
    npm install
