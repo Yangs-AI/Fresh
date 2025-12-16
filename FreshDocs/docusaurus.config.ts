@@ -181,7 +181,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} <a href="https://yangs.ai" class="glass-button">Yangs AI</a>. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} <a href="https://yangs.ai" class="copyright-link">Yangs AI</a>.<br/>Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.oceanicNext,
