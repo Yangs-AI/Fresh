@@ -1,0 +1,221 @@
+---
+sidebar_position: 3
+title: Secure Network
+---
+
+> **Disclaimer:** This tutorial is provided **solely for educational and legitimate research access purposes**. Users must comply with all applicable laws, regulations, and institutional policies. The authors of this guide assume **no responsibility or liability** for any misuse.
+
+---
+
+### Overview
+
+V2Ray is a network proxy framework that supports flexible routing configurations, enabling secure and controlled network access.
+This guide explains how to configure **client-side tools** on different operating systems to achieve **stable, secure, and policy-compliant** network connectivity for research purposes.
+
+This document focuses on **client usage only**.
+If you intend to deploy and maintain your own V2Ray server, please consult your group administrator or service provider and refer to the official documentation below. Server-side deployment requires system administration knowledge and is **out of scope** for our onboarding recipes.
+
+**Reference materials:**
+- [V2Ray Official Website](https://www.v2fly.org/en_US/)
+- [Official Fast Install Script](https://www.v2fly.org/en_US/guide/install.html)
+- [Server Configuration Example](https://www.v2fly.org/en_US/guide/start.html#server)
+
+---
+
+### Choose Your Platform
+
+Select the appropriate client based on your operating system:
+
+- **Windows / macOS** → **V2RayN**
+- **Linux** → **v2rayA**
+
+---
+
+### Tutorial A: V2RayN (Windows / macOS)
+
+**V2RayN** is a lightweight graphical client for V2Ray, widely used on Windows and macOS platforms.
+It provides an intuitive interface for importing configurations, managing nodes, and controlling system proxy behavior.
+
+#### Installation
+
+V2RayN does not require a traditional installer.
+
+1. Download the appropriate release from:
+   https://github.com/2dust/v2rayN
+
+   - **On macOS**, simply download the `.dmg` package and install it in the standard way.
+     No additional runtime or dependency installation is required.
+   - **On Windows**, download the compressed archive.
+
+2. Extract the archive (Windows) to any directory of your choice.
+3. Launch `v2rayN.exe` (Windows) or the installed application (macOS).
+4. Optionally, pin the application to the Start Menu (Windows) or Dock (macOS) for convenience.
+
+> Some configuration options on **Windows** require elevated privileges.
+> If necessary, right-click `v2rayN.exe` and choose **Run as administrator**.  
+> This is **not required on macOS**.
+
+---
+
+#### Basic Usage
+
+1. **Import configurations**
+   - Import share links (e.g. `vmess://`, `vless://`) provided by your institution or a trusted source.
+   - The most commonly used method is:
+     **Configurations → Import Share Links from Clipboard**
+
+2. **Enable system proxy**
+   - Right-click the system tray icon and select **Set System Proxy**.
+
+3. **Verify connectivity**
+   - Access required academic or research resources to confirm that connectivity is functioning as expected.
+
+For detailed explanations of the V2RayN interface and advanced options, see:
+https://github.com/2dust/v2rayN/wiki
+
+---
+
+#### Recommended V2RayN Settings
+
+Navigate to **Settings → Options Setting**.
+
+##### Core: Basic Settings
+
+(Options Setting → Core: Basic Settings)
+
+- **Mixed Port**: `23333`
+  This port is used by browser extensions such as SmartProxy.
+- **Auth user / Auth pass**: Optional. Configure only if authentication is required.
+- **Default TLS fingerprint**: `chrome`
+- **User-Agent**: `chrome`
+- **Allow connections from LAN**:
+  Enable this option **only if** you want this machine to act as a proxy for other devices on the same local network.
+
+Other options (Mux multiplexing, logging, fragmentation, etc.) can remain at their default values unless explicitly required by your setup.
+
+##### V2RayN Settings
+
+(Options Setting → v2rayN Settings)
+
+Recommended options:
+
+- **Start on boot**: Optional  
+  (On Windows, enabling this option requires elevated privileges.)
+- **Auto hide on startup**: Enabled
+- Other options can be left at their default values unless specific behavior is needed.
+
+---
+
+#### Routing and Rules
+
+Navigate to **Settings → Routing Setting**.
+
+Routing rules are configured in the **Routing Setting** section.
+You may select predefined strategies (e.g., whitelist, blacklist, or global routing) according to your requirements.
+
+In general, routing logic should be centralized here, rather than handled by browser extensions.
+
+---
+
+#### Windows-Specific Note: AppContainer Loopback Exemption
+
+On Windows, some Microsoft applications run inside **AppContainer sandboxes** and are not allowed to access local proxy services by default.
+This can lead to issues such as Microsoft account login failures.
+
+##### Recommended Action
+
+Open the **AppContainer Loopback Exemption Utility** in:
+
+**Settings → Set Win10 UWP Loopback**
+
+Enable loopback access for the following entries:
+
+- **Email and accounts**
+- **Work or school account**
+- **Your account**
+
+Enabling an entry allows V2RayN to proxy traffic for that application or service.
+Other applications should be enabled **only if required**, depending on your workflow.
+
+---
+
+### Tutorial B: v2rayA (Linux)
+
+**v2rayA** is a web-based graphical client for V2Ray, commonly used on Linux systems.
+It provides a browser-accessible interface for managing V2Ray connections and routing rules.
+
+#### Installation (Debian / Ubuntu)
+
+```bash
+# Add v2rayA public key
+wget -qO - https://apt.v2raya.org/key/public-key.asc | sudo tee /etc/apt/keyrings/v2raya.asc
+
+# Add v2rayA repository
+echo "deb [signed-by=/etc/apt/keyrings/v2raya.asc] https://apt.v2raya.org/ v2raya main" | sudo tee /etc/apt/sources.list.d/v2raya.list
+
+# Install v2rayA and V2Ray core
+sudo apt update
+sudo apt install v2raya v2ray
+```
+
+#### Start and Enable the Service
+
+```bash
+sudo systemctl start v2raya.service
+sudo systemctl enable v2raya.service
+```
+
+After startup, open your browser and visit:
+
+```
+http://localhost:2017
+```
+
+#### Basic Usage
+
+Within the v2rayA web interface, you can:
+
+- Import nodes using configuration files or subscription URLs
+- Enable or disable proxy services
+- Configure global or selective routing rules
+- Monitor connection status
+
+For advanced usage, see:
+https://v2raya.org/docs/
+
+---
+
+### Browser Configuration: SmartProxy (Recommended)
+
+**SmartProxy** is a browser extension that controls whether browser traffic follows the system proxy.
+
+#### Usage Principle
+
+- Routing logic is managed entirely by **V2RayN / v2rayA**
+- SmartProxy does **not** manage complex routing rules
+- SmartProxy simply ensures browser traffic uses the system proxy when enabled
+
+#### Minimal Recommended Configuration
+
+1. **Add a Proxy Server**
+   - Protocol: `HTTP`
+   - Server: `127.0.0.1`
+   - Port: `23333`
+   - Name: `V2RayN/V2RayA`
+
+2. **Set Default Proxy Server**
+   - Select the proxy server `V2RayN/V2RayA` created above
+
+3. **Enable an "Always Enabled" Profile**
+   - Profile type: *Always Enabled with Bypass Rules*
+   - Proxy server: `V2RayN/V2RayA`
+
+With this setup, SmartProxy acts as a thin browser-side switch, while all routing decisions remain centralized in the V2Ray client.
+
+---
+
+### Summary
+
+When properly configured, V2Ray clients provide **secure, efficient, and flexible access** to research resources.
+
+Always ensure that your usage complies with the network policies of your institution and the laws of your region.
