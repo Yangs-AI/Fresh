@@ -1,0 +1,504 @@
+---
+title: Windows Subsystem for Linux (WSL)
+---
+
+:::info Authors
+Writing Idea by [Jason Young (Zhengxin Yang)](https://jason-young.me)  
+Originally Created by [Luzhou Peng](https://github.com/Zrsion)  
+Generated and Polished by [ChatGPT](https://chat.openai.com)
+:::
+
+This section defines the **Linux system layer** for the environment setup.
+
+For Windows users, we recommend **WSL2 with Debian** as the reference
+Linux environment. All subsequent shell, Python, and IDE configuration assumes
+that this layer is in place and functioning correctly.
+
+<details>
+<summary><strong>📖 Design Philosophy and Architecture (Click to expand)</strong></summary>
+
+## Role of the Linux System Layer
+
+The Linux system layer provides the **execution substrate** for all higher
+layers. Its responsibilities are to:
+- supply a POSIX-compatible userland,
+- provide a predictable filesystem and permission model, and
+- host shells, Python environments, and build tools.
+
+This layer should be stable and boring. Higher layers should not need to work
+around system inconsistencies.
+
+---
+
+## Why WSL2 + Debian as Default
+
+The default is chosen to maximize reliability and reproducibility:
+- WSL2 delivers a real Linux kernel on Windows with low overhead,
+- Debian stable favors long-term consistency over rapid change, and
+- the combined stack reduces drift across machines.
+
+---
+
+## Boundaries and Non-Goals
+
+This layer does not define:
+- shell customization,
+- Python dependency management, or
+- IDE configuration.
+
+Those belong to higher layers in the setup pipeline.
+
+</details>
+
+---
+
+## Role of the Linux System Layer
+
+Modern research and development workflows overwhelmingly assume the presence of
+a Unix-like operating system environment.
+
+Many tools, scripts, and conventions rely on:
+- POSIX-compliant shells and utilities,
+- a standard filesystem hierarchy,
+- predictable process and permission models, and
+- native support for common build and packaging tools.
+
+The Linux system layer provides this execution substrate. Higher layers
+(shell configuration, virtual environments, and IDE integration) depend on it
+but should not need to reimplement or compensate for its absence.
+
+---
+
+## Why WSL on Windows
+
+On Windows, there are several ways to obtain a Unix-like environment, including:
+- virtual machines,
+- dual-boot setups,
+- container-only workflows.
+
+WSL2 offers a uniquely practical compromise:
+
+- it runs a real Linux kernel,
+- integrates tightly with the Windows host,
+- avoids the overhead of full virtual machines, and
+- supports native filesystem and networking interoperability.
+
+For onboarding and day-to-day development, WSL provides a low-friction,
+high-fidelity Linux environment that closely matches deployment and server-side
+contexts.
+
+---
+
+## Why Debian (and Not Ubuntu)
+
+WSL supports multiple Linux distributions. While many are technically viable,
+we recommend **Debian (stable)** for the following reasons:
+
+- **Stability-first release model**  
+  Debian prioritizes correctness and long-term stability over rapid feature
+  turnover.
+
+- **Minimal default assumptions**  
+  Fewer pre-enabled services and opinionated defaults reduce hidden state and
+  unexpected interactions.
+
+- **Predictable package behavior**  
+  Conservative updates make it easier to reason about environment drift across
+  machines and over time.
+
+- **Alignment with reproducibility goals**  
+  Debian's philosophy matches the emphasis on reproducible research and
+  long-lived environments.
+
+This recommendation is not a claim that Debian is universally superior, but a
+deliberate choice aligned with the design principles outlined in the
+Environment Setup overview.
+
+---
+
+## Installation Steps
+
+### Step 1: Install WSL with Debian
+
+Open **PowerShell** or **Windows Command Prompt** as **Administrator** and run:
+
+```powershell
+wsl --install -d Debian
+```
+
+This command will:
+- Enable the required Windows features (Virtual Machine Platform and WSL)
+- Download and install the latest Linux kernel
+- Set WSL 2 as the default version
+- Install Debian directly
+
+After running this command, **restart your computer**.
+
+---
+
+### Step 2: Verify WSL Installation
+
+After restarting, open PowerShell and check the WSL version:
+
+```powershell
+wsl --version
+```
+
+You should see output showing WSL version 2.x.x or higher.
+
+To list installed distributions:
+
+```powershell
+wsl -l -v
+```
+
+---
+
+### Step 3: Launch and Initialize Debian
+
+1. Launch **Debian** from the Start menu
+2. Wait for the initial setup (first launch takes a few minutes)
+3. When prompted, create a **UNIX username** (lowercase, no spaces)
+4. Set a **password** (you won't see characters as you type)
+5. Confirm the password
+
+Example:
+```
+Enter new UNIX username: jason
+New password: ********
+Retype new password: ********
+```
+
+---
+
+### Step 4: Verify WSL2 Usage
+
+Ensure Debian is running on WSL 2 (not WSL 1):
+
+From PowerShell:
+
+```powershell
+wsl -l -v
+```
+
+Expected output:
+```
+  NAME      STATE           VERSION
+* Debian    Running         2
+```
+
+If it shows `VERSION 1`, upgrade it:
+
+```powershell
+wsl --set-version Debian 2
+```
+
+---
+
+### Step 5: Update Base System
+
+Inside the Debian shell, update the package list and upgrade installed packages:
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+```
+
+**Explanation:**
+- `sudo`: Execute command with administrator privileges
+- `apt update`: Refresh the list of available packages
+- `apt upgrade -y`: Install the latest versions of all packages (auto-confirm with `-y`)
+
+This ensures the base system is in a consistent, up-to-date state.
+
+---
+
+### Step 6: Install Essential Development Tools
+
+Install a foundational set of packages used throughout later steps:
+
+```bash
+sudo apt install -y \
+  build-essential \
+  curl \
+  wget \
+  git \
+  ca-certificates \
+  unzip \
+  zip \
+  tmux
+```
+
+**What each package does:**
+- `build-essential`: C/C++ compilers and build tools (gcc, g++, make)
+- `curl`: Command-line tool for transferring data with URLs
+- `wget`: Command-line downloader for files from the web
+- `git`: Version control system
+- `ca-certificates`: SSL/TLS certificates for secure connections
+- `unzip` / `zip`: Archive utilities
+- `tmux`: Terminal multiplexer for managing multiple terminal sessions
+
+These tools are assumed to be present by subsequent recipes.
+
+---
+
+### Step 7: Verify Installation
+
+Check that key tools are available:
+
+```bash
+gcc --version
+git --version
+python3 --version
+tmux -V
+```
+
+Each command should display version information without errors.
+
+---
+
+## Filesystem and Interoperability
+
+### Accessing Files
+
+WSL provides access to both:
+- **Linux filesystem**: Native Linux files (recommended for development)
+- **Windows filesystem**: Mounted at `/mnt/c/`, `/mnt/d/`, etc.
+
+#### From Linux to Windows:
+```bash
+# Access Windows C: drive
+cd /mnt/c/Users/YourUsername/Documents
+
+# Access Windows Desktop
+cd /mnt/c/Users/YourUsername/Desktop
+```
+
+#### From Windows to Linux:
+In Windows File Explorer, navigate to:
+```
+\\wsl$\Debian\home\yourusername
+```
+
+Or type in the address bar: `\\wsl$\Debian`
+
+---
+
+### Best Practices
+
+For performance and predictability, we recommend that:
+
+1. **Store code in Linux filesystem**
+   ```bash
+   # Good: Project in Linux home directory
+   ~/projects/myproject
+   
+   # Avoid: Project in Windows filesystem
+   /mnt/c/Users/jason/projects/myproject
+   ```
+
+2. **Use cross-filesystem access sparingly**
+   - Accessing Windows files from Linux is slower
+   - File permissions can behave unexpectedly (e.g. `chmod` may not work as expected on `/mnt/c/`, files with Windows ACLs may have different permissions in Linux)
+
+3. **Create a consistent workspace structure**
+   ```bash
+   mkdir -p ~/projects
+   mkdir -p ~/workspace
+   cd ~/projects
+   ```
+
+This convention reduces I/O overhead and avoids subtle permission or path
+translation issues.
+
+---
+
+## Common Tasks
+
+### Starting Debian
+
+**From Start Menu:**
+- Search for "Debian" and click
+
+**From Windows Terminal (Recommended):**
+1. Install [Windows Terminal](https://aka.ms/terminal) from Microsoft Store if not already installed
+2. Open Windows Terminal
+3. Click the dropdown arrow (∨) next to the tabs
+4. Select "Debian"
+5. (Optional) Set Debian as default: Settings → Startup → Default profile → Debian
+
+**From Command Line:**
+```powershell
+wsl -d Debian
+```
+
+**Quick access (default distro):**
+```powershell
+wsl
+```
+
+---
+
+### Shutting Down WSL
+
+To stop all WSL instances:
+```powershell
+wsl --shutdown
+```
+
+To stop specific distribution:
+```powershell
+wsl --terminate Debian
+```
+
+---
+
+### Setting Debian as Default
+
+If you have multiple distributions:
+```powershell
+wsl --set-default Debian
+```
+
+Now typing `wsl` will launch Debian directly.
+
+---
+
+## WSL Configuration
+
+### Creating .wslconfig
+
+To optimize WSL performance and enable advanced features like proxy auto-detection, create a `.wslconfig` file in your Windows user directory.
+
+**Location:** `C:\Users\YourUsername\.wslconfig`
+
+**From PowerShell:**
+```powershell
+notepad $env:USERPROFILE\.wslconfig
+```
+
+**Recommended Configuration:**
+```ini
+[wsl2]
+memory=32GB
+swap=32GB
+processors=8
+
+[experimental]
+autoMemoryReclaim=gradual
+networkingMode=mirrored
+dnsTunneling=true
+firewall=true
+autoProxy=true
+sparseVhd=true
+```
+
+**Configuration Explanation:**
+- `memory`: Maximum RAM allocated to WSL (adjust based on your system)
+- `swap`: Swap space size
+- `processors`: Number of CPU cores allocated
+- `autoMemoryReclaim=gradual`: Automatically reclaim unused memory
+- `networkingMode=mirrored`: Mirror Windows network configuration
+- `dnsTunneling=true`: Better DNS resolution
+- `firewall=true`: Use Windows firewall rules
+- `autoProxy=true`: **Automatically detect and use Windows proxy settings**
+- `sparseVhd=true`: Automatically shrink virtual disk
+
+**Apply Changes:**
+After creating or editing `.wslconfig`, restart WSL:
+```powershell
+wsl --shutdown
+```
+
+:::tip Proxy Configuration
+The `autoProxy=true` setting is particularly useful if you're working behind a corporate proxy or using VPN. WSL will automatically inherit proxy settings from Windows.
+
+If you need to set up a proxy for research or institutional access, see our [Secure Network](/memo/onboarding_recipes/secure_network) guide for recommended configurations.
+:::
+
+---
+
+## Troubleshooting
+
+### WSL Command Not Found
+
+**Problem:** `wsl: command not found` or `'wsl' is not recognized`
+
+**Solution:**
+1. Ensure you're running Windows 10 version 2004+ or Windows 11
+2. Check Windows version: `winver` in Run dialog (Win+R)
+3. Update Windows via Windows Update
+
+---
+
+### Virtual Machine Platform Not Enabled
+
+**Problem:** Error about "Virtual Machine Platform" during installation
+
+**Solution:** Enable it manually in PowerShell (as Administrator):
+```powershell
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+Then restart your computer.
+
+---
+
+### Cannot Connect to Network
+
+**Problem:** `apt update` fails with network errors
+
+**Solution 1:** Check DNS settings in `/etc/resolv.conf`:
+```bash
+sudo nano /etc/resolv.conf
+```
+
+Add Google DNS:
+```
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+```
+
+**Solution 2:** Restart WSL:
+```powershell
+wsl --shutdown
+wsl
+```
+
+---
+
+## Scope and Non-Goals
+
+This section intentionally does **not** cover:
+
+* graphical Linux desktops,
+* window managers or display servers,
+* container orchestration,
+* advanced kernel or system tuning.
+
+The goal is a **minimal, reliable Linux execution environment**, not a full
+Linux desktop replacement.
+
+---
+
+## Expected Outcome
+
+After completing this section, readers should have:
+
+* a working Linux environment available via WSL,
+* a clear understanding of why this layer exists,
+* a stable foundation for shell configuration, and
+* confidence that subsequent setup steps can assume a Unix-like system context.
+
+With the Linux system layer in place, the next step is to configure the
+**interactive shell**, which mediates all further interaction with the system.
+
+---
+
+## Additional Resources
+
+- [Official Microsoft WSL Documentation](https://docs.microsoft.com/en-us/windows/wsl/)
+- [Debian Official Website](https://www.debian.org/)
+- [WSL GitHub Repository](https://github.com/microsoft/WSL)
+- [Debian WSL on Microsoft Store](https://www.microsoft.com/store/productId/9MSVKQC78PK6)

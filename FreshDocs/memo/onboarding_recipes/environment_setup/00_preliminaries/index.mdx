@@ -1,0 +1,210 @@
+---
+title: Preliminaries
+---
+
+:::info Authors
+Writing Idea by [Jason Young (Zhengxin Yang)](https://jason-young.me)  
+Originally Created by [Luzhou Peng](https://github.com/Zrsion)  
+Generated and Polished by [ChatGPT](https://chat.openai.com)
+:::
+
+This section establishes the **minimal conceptual and operational assumptions**
+used throughout the environment setup pipeline.
+
+It intentionally avoids tool-specific configuration and platform-dependent
+details. Instead, it defines the shared vocabulary, mental models, and basic
+command-line expectations that all subsequent layers rely on.
+
+<details>
+<summary><strong>📖 Design Philosophy and Architecture (Click to expand)</strong></summary>
+
+## Role of the Preliminaries Layer
+
+The preliminaries layer defines **shared mental models**. Its purpose is to:
+- align terminology (shell, terminal, path, current directory),
+- reduce ambiguity in later instructions, and
+- establish the minimum operational baseline required for all later layers.
+
+This layer does not install tools or change the system. It only establishes
+concepts and expectations that make the rest of the setup reproducible and
+easier to troubleshoot.
+
+---
+
+## Why This Layer Exists
+
+Most onboarding failures come from misunderstandings rather than missing tools.
+By explicitly defining core concepts, we avoid hidden assumptions and reduce
+friction across different backgrounds and operating systems.
+
+---
+
+## Boundaries and Non-Goals
+
+This layer deliberately avoids:
+- platform-specific instructions,
+- configuration steps, and
+- tool-specific workflows.
+
+Those topics belong to the Linux, shell, virtual environment, and IDE layers.
+
+</details>
+
+---
+
+## Purpose of This Section
+
+Before configuring operating systems, shells, virtual environments, or IDEs,
+it is important to align on a small set of foundational concepts.
+
+Many onboarding difficulties arise not from missing tools, but from
+misunderstandings about:
+- what a shell actually is,
+- how commands are executed,
+- how files and directories are addressed, and
+- where configuration state lives.
+
+The purpose of this section is to **eliminate such ambiguity early**, so later
+recipes can focus on substantive setup steps rather than repeatedly clarifying
+basics.
+
+---
+
+## What This Section Assumes
+
+After completing this section, readers are expected to be comfortable with:
+
+- interacting with a command-line interface,
+- navigating the filesystem using relative and absolute paths,
+- executing commands and understanding their scope, and
+- recognizing where configuration files are located and how they are applied.
+
+No prior experience with Linux, Python, or any specific development tool is
+assumed.
+
+---
+
+## Core Concepts
+
+### Shell, Terminal, and Console
+
+In this documentation, the terms **shell**, **terminal**, and **console** are
+used interchangeably to refer to a command-line interface in which commands are
+typed and executed.
+
+Conceptually:
+- the **shell** is the program that interprets commands,
+- the **terminal** is the interface used to interact with the shell.
+
+For practical purposes in this onboarding process, the distinction is not
+important. **What matters is that commands entered into the terminal are executed
+by the shell in the current environment.**
+
+---
+
+### Files, Directories, and Paths
+
+A **directory** is a container for files and other directories.  
+A **path** specifies the location of a file or directory.
+
+Two forms of paths are commonly used:
+
+- **Absolute paths**, which start from the root directory `/` (e.g. `/home/user`)
+- **Relative paths**, which are interpreted with respect to the current working
+  directory `.` (e.g. `./config`, `../data`)
+
+Understanding which form is being used is essential for predicting the effect
+of commands and avoiding unintended side effects.
+
+---
+
+### Current Working Directory
+
+Every shell session has a **current working directory**.
+
+Commands such as file creation, deletion, or execution typically operate
+relative to this directory unless an absolute path is provided.
+
+The current directory can be inspected with (on Linux systems, in most shells including Zsh, Bash, etc.):
+
+```bash
+pwd
+````
+
+and changed with:
+
+```bash
+cd <path>
+```
+
+---
+
+### Executing Commands
+
+A command entered into the shell generally follows this structure:
+
+```text
+command [options] [arguments]
+```
+
+Key points:
+
+* commands are executed in the current environment,
+* their behavior may depend on environment variables (e.g. `PATH`, `HOME`, `HTTP_PROXY`, `HTTPS_PROXY`, etc.),
+* their effects may be local (e.g. printing output) or persistent (e.g. creating
+  files or modifying configuration).
+
+Understanding that commands can have lasting effects is critical when working
+with setup scripts and configuration files.
+
+---
+
+## Configuration Files and State
+
+Many tools store configuration in **plain text files** located in the user's
+home directory `~` (e.g. files beginning with `.`, like `.bashrc`, `.zshrc`, `.vimrc`).
+
+Examples include:
+
+* shell configuration files (e.g. `.bashrc`, `.zshrc`),
+* environment initialization scripts (e.g. for virtual environments), and
+* tool-specific settings (e.g. `.gitconfig`, `.vimrc`).
+
+A key principle for effective environment management is:
+
+> **Configuration should be explicit, inspectable, and version-controlled
+> whenever possible.**
+
+At the same time, sensitive information (such as secrets or credentials) must
+be kept out of version control and handled separately.
+
+Later sections will introduce concrete patterns for achieving this separation.
+
+---
+
+## Scope and Non-Goals
+
+This section intentionally does **not** cover:
+
+* shell customization or theming,
+* Linux distribution–specific behavior,
+* Python virtual environments,
+* editor or IDE configuration.
+
+Each of these topics is addressed in later layers, once the foundational
+concepts introduced here are in place.
+
+---
+
+## Expected Outcome
+
+After completing this section, readers should:
+
+* feel oriented rather than overwhelmed when encountering shell-based
+  instructions,
+* understand the basic structure of setup commands,
+* know where configuration files live and why they matter, and
+* be prepared to proceed to the Linux system layer with a clear mental model.
+
+With these preliminaries established, subsequent sections can safely assume a
+shared baseline and focus on higher-level configuration decisions.

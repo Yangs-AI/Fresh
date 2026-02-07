@@ -1,0 +1,544 @@
+---
+title: Shell Configuration
+---
+
+:::info Authors
+Writing Idea by [Jason Young (Zhengxin Yang)](https://jason-young.me)  
+Originally Created by [Luzhou Peng](https://github.com/Zrsion)  
+Generated and Polished by [ChatGPT](https://chat.openai.com)
+:::
+
+This section guides you through configuring **Zsh** with **Oh My Zsh** to create a consistent, reproducible shell environment. You'll set up a standardized configuration using pre-configured dotfiles that handle environment variables, SSH keys, proxy settings, and development tool integration.
+
+<details>
+<summary><strong>📖 Design Philosophy and Architecture (Click to expand)</strong></summary>
+
+## Role of the Shell Layer
+
+The shell occupies a critical position between the operating system and all higher-level tooling. Within this setup, the shell is responsible for:
+
+- command execution and scripting,
+- environment variable management,
+- secret and credential loading,
+- proxy and network configuration,
+- activation of development environments, and
+- basic developer ergonomics (aliases, prompt, helper functions).
+
+Crucially, the shell **does not define project dependencies or tooling logic**. Instead, it provides a controlled and predictable interface through which those tools are accessed.
+
+---
+
+## Why the Shell Deserves Its Own Layer
+
+In many setups, shell configuration is treated as an informal or ad-hoc concern. This often leads to problems such as:
+
+- hidden environment state that is difficult to reproduce,
+- configuration scattered across multiple files with unclear precedence,
+- accidental leakage of secrets into version control, and
+- inconsistent behavior across machines or users.
+
+By explicitly defining a shell configuration layer, this guide aims to:
+
+- make environment state visible and inspectable,
+- separate durable configuration from machine-local secrets,
+- reduce onboarding variance, and
+- establish clear boundaries between system, shell, and application concerns.
+
+---
+
+## Recommended Shell: Zsh
+
+This documentation standardizes on **Zsh** as the interactive shell. Zsh is selected because it:
+
+- is widely available on modern Unix-like systems,
+- is largely compatible with POSIX shell conventions,
+- provides robust scripting and customization capabilities, and
+- supports structured configuration without excessive indirection.
+
+The choice of Zsh is not meant to exclude other shells, but to provide a single reference implementation that all examples and recipes can safely assume.
+
+---
+
+## Configuration via Shared Dotfiles
+
+Rather than configuring the shell interactively or manually on each machine, this guide assumes the use of **version-controlled dotfiles** to define shell behavior.
+
+The guiding principles for shell configuration are:
+
+- **Configuration should be explicit** – Behavior should be defined in readable configuration files, not implied by side effects.
+- **Configuration should be inspectable** – Users should be able to understand where a given behavior originates.
+- **Secrets must remain local** – Credentials, tokens, and private keys must never be committed to shared repositories.
+
+---
+
+## Separation of Concerns
+
+A critical design principle of this layer is **separation of concerns**:
+
+- **Shell configuration** – Environment variables, aliases, functions, prompt, proxy toggles, and environment activation hooks.
+- **Python virtual environments** – Dependency resolution and package isolation (handled in the next section).
+- **Project configuration** – Project-specific settings tracked within individual repositories.
+
+Maintaining this separation prevents shell configuration from becoming a catch-all for unrelated concerns.
+
+---
+
+## Environment Variables and Secrets
+
+The shell is the natural place to define environment variables, but this must be done carefully. This guide assumes the following pattern:
+
+- non-sensitive configuration may be tracked in version control,
+- sensitive values (API keys, tokens, credentials) are stored in local, git-ignored files, and
+- shell startup files explicitly source these local overrides if present.
+
+This ensures that secrets never enter version control, and the presence or absence of secrets is explicit and debuggable.
+
+---
+
+## Proxy and Network Configuration
+
+Network-related configuration (such as HTTP or SOCKS proxies) is handled at the shell layer. Managing proxies in the shell, rather than inside individual tools, provides a single point of control, consistent behavior across tools, and the ability to enable or disable proxying dynamically.
+
+---
+
+## Interaction with Python Environments
+
+Although Python virtual environments are configured in the next section, the shell must be prepared to **activate and deactivate environments reliably**. This involves ensuring the appropriate initialization scripts are sourced, avoiding implicit activation unless explicitly desired, and making environment state visible in the shell prompt when active.
+
+---
+
+## Scope and Non-Goals
+
+This section intentionally does **not** cover:
+
+- detailed theming or aesthetic customization,
+- advanced shell scripting techniques,
+- project-specific aliases or shortcuts, or
+- package installation and dependency management.
+
+These topics are either optional, highly personal, or addressed in later layers.
+
+</details>
+
+---
+
+## Installation and Setup
+
+### Step 1: Install Oh My Zsh
+
+Oh My Zsh is a framework for managing Zsh configuration. Install it using one of the following methods:
+
+**Using curl:**
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+**Using wget:**
+```bash
+sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+The installer will:
+- Install Oh My Zsh to `~/.oh-my-zsh`
+- Back up your existing `.zshrc` to `.zshrc.pre-oh-my-zsh`
+- Set Zsh as your default shell (if not already)
+
+---
+
+### Step 2: Clone the My-RC Repository
+
+We provide a pre-configured Zsh setup that follows best practices:
+
+```bash
+cd ~
+git clone https://github.com/Jason-Young-AI/My-RC.git
+```
+
+---
+
+### Step 3: Backup Existing Configuration
+
+If you have an existing `.zshrc`:
+
+```bash
+mv ~/.zshrc ~/.zshrc-backup
+```
+
+---
+
+### Step 4: Create Symbolic Link
+
+Link the pre-configured `.zshrc` from My-RC:
+
+```bash
+ln -s ~/My-RC/zsh/.zshrc ~/.zshrc
+```
+
+---
+
+### Step 5: Customize Configuration
+
+Open `~/.zshrc` in your editor:
+
+```bash
+nano ~/.zshrc
+# or
+vim ~/.zshrc
+```
+
+Make the following customizations:
+
+---
+
+## Configuration Guide
+
+### 1. Change Shell Theme
+
+The default theme is `ys`. To change it, find line 11 in `.zshrc`:
+
+```bash
+ZSH_THEME="ys"
+```
+
+Popular alternatives:
+- `"robbyrussell"` - Minimal and fast
+- `"agnoster"` - Powerline style (requires patched fonts)
+- `"awesomepanda"` - Colorful with git info
+- `"bira"` - Clean two-line prompt
+
+Full theme list: https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+
+**Example:**
+```bash
+ZSH_THEME="agnoster"
+```
+
+---
+
+### 2. Configure SSH Keys
+
+Find the `start_agent` function (around line 144) and modify the SSH key loading line:
+
+**Before:**
+```bash
+ssh-add ${HOME}/.ssh/${YourKeys}; #Your Keys
+```
+
+**After:**
+```bash
+ssh-add ${HOME}/.ssh/id_rsa;       # For RSA keys
+# or
+ssh-add ${HOME}/.ssh/id_ed25519;   # For Ed25519 keys
+# or
+ssh-add ${HOME}/.ssh/GitHub;       # For custom named keys
+```
+
+**Multiple keys:**
+```bash
+ssh-add ${HOME}/.ssh/id_rsa;
+ssh-add ${HOME}/.ssh/GitHub;
+ssh-add ${HOME}/.ssh/GitLab;
+```
+
+:::tip
+If you don't have SSH keys yet, generate them with:
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+:::
+
+---
+
+### 3. Configure Proxy Settings
+
+The `.zshrc` includes `proxy_on` and `proxy_off` functions for easy proxy management.
+
+Find the `proxy_on` function (around line 103) and configure your proxy server:
+
+**Before:**
+```bash
+local proxy_server="233.233.233.233"   # WSL Host IP
+local proxy_port="23333"
+```
+
+**After (for WSL users with V2RayN on Windows):**
+```bash
+local proxy_server="$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}')"
+local proxy_port="23333"
+```
+
+This automatically detects your WSL host IP.
+
+**For fixed proxy:**
+```bash
+local proxy_server="127.0.0.1"
+local proxy_port="7890"
+```
+
+**Usage:**
+```bash
+# Enable proxy
+proxy_on
+
+# Disable proxy
+proxy_off
+```
+
+If your proxy requires authentication, `proxy_on` will prompt for username and password.
+
+:::tip
+If you've configured `.wslconfig` with `autoProxy=true` (see [WSL Configuration](/memo/onboarding_recipes/environment_setup/windows_subsystem_for_linux#wsl-configuration)), most applications will automatically use Windows proxy settings. The `proxy_on` function is mainly for command-line tools like `curl`, `wget`, `git`, and `apt`.
+
+For detailed proxy server setup (V2RayN, v2rayA), see our [Secure Network](/memo/onboarding_recipes/secure_network) guide.
+:::
+
+---
+
+### 4. Enable Conda (Optional)
+
+If you're using `conda` instead of `venv`, initialize it in your `.zshrc`.
+
+Add at the end of `~/.zshrc`:
+
+```bash
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/username/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/username/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/username/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/username/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+```
+You can replace `miniconda3` with `anaconda3` if that's what you have installed.
+The username should be your actual system username.
+
+**Better: Let Conda generate this automatically:**
+```bash
+conda init zsh
+```
+
+This will automatically add the initialization code to your `.zshrc`.
+
+**Disable auto-activation of base environment:**
+```bash
+conda config --set auto_activate_base false
+```
+
+---
+
+### 5. Additional Useful Customizations
+
+#### Custom Aliases
+
+Add your own aliases (recommended location: after line 100):
+
+```bash
+# Navigation
+alias ..="cd .."
+alias ...="cd ../.."
+alias projects="cd ~/projects"
+
+# Git shortcuts
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gp="git push"
+alias gl="git log --oneline --graph"
+
+# Python
+alias py="python3"
+alias pip="pip3"
+
+# System
+alias update="sudo apt update && sudo apt upgrade -y"
+alias clean="sudo apt autoremove -y && sudo apt clean"
+```
+
+#### Additional Oh My Zsh Plugins
+
+Find the `plugins` line (around line 73) and add more:
+
+**Before:**
+```bash
+plugins=(git)
+```
+
+**After:**
+```bash
+plugins=(
+    git
+    python
+    pip
+    docker
+    kubectl
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+)
+```
+
+**Note:** Some plugins require separate installation:
+```bash
+# zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+```
+
+---
+
+## Apply Configuration
+
+After making changes, reload your shell configuration:
+
+```bash
+source ~/.zshrc
+```
+
+Or simply open a new terminal.
+
+---
+
+## Verify Setup
+
+Check that everything is working:
+
+```bash
+# Check Zsh version
+zsh --version
+
+# Check Oh My Zsh
+echo $ZSH
+
+# Test SSH agent
+ssh-add -l
+
+# Test proxy functions
+proxy_on
+curl -I https://www.google.com
+proxy_off
+
+# Check theme
+echo $ZSH_THEME
+```
+
+---
+
+## Troubleshooting
+
+### Theme Not Displaying Correctly
+
+**Problem:** Special characters showing as boxes or question marks
+
+**Solution:** Install Powerline-patched fonts:
+```bash
+# Clone the repository
+git clone https://github.com/powerline/fonts.git --depth=1
+cd fonts
+./install.sh
+cd ..
+rm -rf fonts
+```
+
+Then set your terminal to use a Powerline font (e.g., "DejaVu Sans Mono for Powerline").
+
+---
+
+### SSH Keys Not Loading
+
+**Problem:** `ssh-add` fails or keys not found
+
+**Solution:**
+1. Check key exists:
+   ```bash
+   ls -la ~/.ssh/
+   ```
+
+2. Verify key permissions:
+   ```bash
+   chmod 600 ~/.ssh/id_rsa
+   chmod 644 ~/.ssh/id_rsa.pub
+   ```
+
+3. Test SSH agent:
+   ```bash
+   eval "$(ssh-agent -s)"
+   ssh-add ~/.ssh/id_rsa
+   ```
+
+---
+
+### Proxy Not Working
+
+**Problem:** `proxy_on` enables but connection still fails
+
+**Solution:**
+
+1. Verify proxy server is running (e.g., V2RayN on Windows)
+
+2. Check WSL can reach Windows host:
+   ```bash
+   # Get Windows host IP
+   cat /etc/resolv.conf | grep nameserver | awk '{print $2}'
+   
+   # Test connection
+   curl -v -x http://HOST_IP:23333 https://www.google.com
+   ```
+
+3. For WSL users, ensure Windows Firewall allows connections
+
+---
+
+### Conda Not Activating
+
+**Problem:** `conda: command not found`
+
+**Solution:**
+
+1. Verify Conda installation:
+   ```bash
+   ls ~/miniconda3/bin/conda
+   # or
+   ls ~/anaconda3/bin/conda
+   ```
+
+2. Manual initialization:
+   ```bash
+   ~/miniconda3/bin/conda init zsh
+   source ~/.zshrc
+   ```
+
+3. Check PATH:
+   ```bash
+   echo $PATH | grep conda
+   ```
+
+---
+
+## Additional Resources
+
+- [Oh My Zsh Official Documentation](https://github.com/ohmyzsh/ohmyzsh/wiki)
+- [My-RC Repository](https://github.com/Jason-Young-AI/My-RC)
+- [Zsh Documentation](https://zsh.sourceforge.io/Doc/)
+- [Oh My Zsh Themes](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
+- [Oh My Zsh Plugins](https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins)
+- [Secure Network Configuration](/memo/onboarding_recipes/secure_network) - For detailed proxy setup with V2Ray
+
+---
+
+## Next Steps
+
+With a properly configured shell environment, you now have:
+- A consistent and predictable interactive shell
+- Easy control over environment variables and proxies
+- SSH key management
+- A foundation for activating Python virtual environments
+
+The next section covers **Python Virtual Environments**, where you'll learn to isolate project dependencies and manage Python versions.
