@@ -75,6 +75,8 @@ const config: Config = {
         sidebarPath: './sidebarsMemo.ts',
         routeBasePath: 'memo',
         disableVersioning: false,
+        showLastUpdateTime: true,
+        showLastUpdateAuthor: true,
       }
     ],
     [

@@ -1,0 +1,658 @@
+---
+title: Python Virtual Environments
+---
+
+:::info Authors
+Writing Idea by [Jason Young (Zhengxin Yang)](https://jason-young.me)  
+Originally Created by [Luzhou Peng](https://github.com/Zrsion)  
+Generated and Polished by [ChatGPT](https://chat.openai.com)
+:::
+
+This section guides you through setting up **Python virtual environments** to isolate project dependencies. You'll learn to use **`conda`** (recommended, strong Python version and binary dependency management) or **`venv` + `pip`** (optional, minimal and widely supported) for managing Python versions and packages on a per-project basis.
+
+<details>
+<summary><strong>📖 Design Philosophy and Architecture (Click to expand)</strong></summary>
+
+## Role of the Virtual Environment Layer
+
+Python projects rarely operate in isolation. Different projects may require:
+
+- different Python versions,
+- incompatible versions of the same dependency,
+- different build options or system bindings.
+
+Without explicit isolation, these requirements quickly conflict, leading to fragile setups and irreproducible results. The virtual environment layer addresses this by ensuring that:
+- each project has an isolated dependency set,
+- dependencies are installed intentionally rather than implicitly, and
+- environment state can be reconstructed on a new machine.
+
+---
+
+## Why Isolation Is Mandatory
+
+In this guide, Python virtual environments are **not optional**. Relying on a global Python installation introduces hidden coupling between projects and makes it difficult to reason about failures. Even small changes to a shared environment can have cascading effects that are hard to diagnose.
+
+By contrast, explicit environments:
+- localize dependency changes,
+- make assumptions visible, and
+- support reproducibility across machines and users.
+
+---
+
+## Default Path: `conda`
+
+This documentation adopts **`conda`** as the default and recommended path for Python virtual environments. This choice is motivated by the following considerations:
+
+- `conda` manages Python versions and dependencies in one tool,
+- it handles compiled and non-Python libraries reliably,
+- binary packages reduce build friction on fresh machines, and
+- environments can be exported and recreated with clear constraints.
+
+Together, these features provide a practical baseline for cross-platform scientific and production workflows.
+
+---
+
+## Optional Path: `venv` + `pip`
+
+While `conda` is recommended, some scenarios benefit from **`venv`**:
+
+- projects that only need pure Python dependencies,
+- teams that prefer the standard library toolchain,
+- environments that must stay minimal and transparent.
+
+In these cases, `venv` with `pip` provides a simple, widely understood workflow. This guide treats `venv` as an **optional alternative**, not the default.
+
+---
+
+## Separation of Responsibilities
+
+A key design principle is to keep responsibilities clearly separated:
+
+- **Virtual environments** – Define Python versions and dependency sets.
+- **Shell configuration** – Activates environments and exposes their state.
+- **Project repositories** – Declare required dependencies and usage conventions.
+
+Virtual environments should not encode project logic, and shell configuration should not encode dependency resolution.
+
+---
+
+## Dependency Specification and Reproducibility
+
+Regardless of the tool used, dependency requirements must be **explicitly declared**. Common practices include:
+- listing top-level dependencies in a requirements file,
+- separating development and runtime dependencies when appropriate, and
+- avoiding reliance on transitive or implicitly installed packages.
+
+The exact format of dependency specification is project-dependent and therefore not prescribed at this layer. What matters is that dependency state can be recreated deterministically from version-controlled files.
+
+</details>
+
+---
+
+## Using `conda` (Recommended)
+
+### When to Use Conda
+
+Use `conda` if your project:
+- Requires complex scientific/numerical libraries (NumPy, SciPy, TensorFlow, PyTorch)
+- Needs non-Python dependencies (CUDA, MKL, system libraries)
+- Benefits from pre-compiled binary packages
+- Requires specific Python versions not easily available via `venv`
+
+---
+
+### Installation
+
+If not already installed, download and install Miniconda or Anaconda:
+
+**Miniconda (recommended, minimal installation):**
+```bash
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+```
+
+:::tip Running the installer in zsh
+Running `bash Miniconda3-latest-Linux-x86_64.sh` from a zsh shell is safe. The script is executed by `bash`, independent of your current shell.
+:::
+
+Follow the prompts, then initialize conda for your shell:
+```bash
+conda init zsh  # or bash, depending on your shell
+source ~/.zshrc
+```
+
+---
+
+### Basic Workflow
+
+#### 1. Create a Conda Environment
+
+```bash
+# Create with specific Python version
+conda create -n myproject python=3.11
+
+# Create with packages
+conda create -n myproject python=3.11 numpy pandas matplotlib
+```
+
+---
+
+#### 2. Activate the Environment
+
+```bash
+conda activate myproject
+```
+
+Your prompt will show the environment name:
+```bash
+(myproject) user@machine:~$
+```
+
+---
+
+#### 3. Install Packages
+
+**From conda repositories (preferred):**
+```bash
+conda install numpy pandas matplotlib
+```
+
+**From PyPI using pip (if not available in conda):**
+```bash
+pip install some-package
+```
+
+:::warning Mixing conda and pip
+When possible, install packages via `conda` first, then use `pip` for packages not available in conda channels. This avoids dependency conflicts.
+:::
+
+---
+
+#### 4. Save Environment Configuration
+
+**Using `environment.yml` (recommended):**
+
+```bash
+conda env export > environment.yml
+```
+
+This creates a file like:
+```yaml
+name: myproject
+channels:
+   - defaults
+dependencies:
+   - python=3.11
+   - numpy=1.24.3
+   - pandas=2.0.2
+   - pip:
+      - some-pip-package==1.0.0
+```
+
+:::warning Cross-Platform Limitations
+**`conda env export` includes platform-specific builds and may not work across different operating systems.**
+
+**For cross-platform compatibility, use:**
+
+```bash
+# Export without build specifications (cross-platform friendly)
+conda env export --no-builds > environment.yml
+
+# Or export only package names and versions (most portable)
+conda env export --from-history > environment.yml
+```
+
+**Comparison:**
+- `conda env export` – Full specification, **not cross-platform** (includes OS-specific builds)
+- `conda env export --no-builds` – No build numbers, **better cross-platform** support
+- `conda env export --from-history` – Only explicitly installed packages, **most portable** but may miss dependencies
+
+**Best practice for multi-platform teams:**
+```bash
+# Save explicit environment (for same platform reproduction)
+conda env export > environment-lock.yml
+
+# Save portable environment (for cross-platform)
+conda env export --from-history > environment.yml
+```
+
+Commit `environment.yml` to version control. Keep `environment-lock.yml` for exact reproduction on the same platform.
+:::
+
+**Or use `requirements.txt` for pip packages only:**
+```bash
+pip freeze > requirements.txt
+```
+
+---
+
+#### 5. Recreate Environment from Configuration
+
+```bash
+# From environment.yml
+conda env create -f environment.yml
+
+# From requirements.txt
+conda create -n myproject python=3.11
+conda activate myproject
+pip install -r requirements.txt
+```
+
+---
+
+#### 6. Deactivate and Remove Environments
+
+```bash
+# Deactivate
+conda deactivate
+
+# Remove environment
+conda env remove -n myproject
+```
+
+---
+
+### Quick Reference Commands
+
+```bash
+# Create environment
+conda create -n <name> python=3.11
+
+# Activate
+conda activate <name>
+
+# Deactivate
+conda deactivate
+
+# List environments
+conda env list
+
+# Install package
+conda install <package>
+
+# Search for package
+conda search <package>
+
+# Export environment
+conda env export > environment.yml
+
+# Create from environment.yml
+conda env create -f environment.yml
+
+# Remove environment
+conda env remove -n <name>
+
+# Update conda
+conda update conda
+
+# Update all packages
+conda update --all
+```
+
+---
+
+## Using `venv` + `pip` (Optional)
+
+### Basic Workflow
+
+#### 1. Create a Virtual Environment
+
+Navigate to your project directory and create a virtual environment:
+
+```bash
+cd ~/projects/my-project
+python3 -m venv .venv
+```
+
+If you need a specific Python version, call that interpreter directly:
+```bash
+python3.11 -m venv .venv
+```
+
+:::tip Python version selection with venv
+`venv` does not download Python. It uses the interpreter you invoke, so you must install the target Python version on your system first.
+:::
+
+This creates a `.venv` directory containing:
+- A copy of the Python interpreter
+- `pip` and `setuptools`
+- An isolated `site-packages` directory
+
+:::tip Naming Convention
+Use `.venv` as the directory name. The leading dot makes it hidden by default, and the name is widely recognized by IDEs and tools.
+:::
+
+---
+
+#### 2. Activate the Environment
+
+**On Linux/macOS/Windows (WSL):**
+```bash
+source .venv/bin/activate
+```
+
+After activation, your prompt will change to show the environment name:
+```bash
+(.venv) user@machine:~/projects/my-project$
+```
+
+---
+
+#### 3. Verify Activation
+
+Check that Python and pip are using the virtual environment:
+
+```bash
+which python
+# Output: /home/user/projects/my-project/.venv/bin/python
+
+which pip
+# Output: /home/user/projects/my-project/.venv/bin/pip
+
+python --version
+pip --version
+```
+
+---
+
+#### 4. Install Packages
+
+Install packages as needed:
+
+```bash
+pip install numpy pandas matplotlib
+```
+
+Install from a requirements file:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+#### 5. Save Dependencies
+
+Export installed packages to a requirements file:
+
+```bash
+pip freeze > requirements.txt
+```
+
+This creates a reproducible list of all installed packages with exact versions:
+```
+numpy==1.24.3
+pandas==2.0.2
+matplotlib==3.7.1
+```
+
+:::tip Development vs. Production
+Separate requirements into multiple files if needed:
+- `requirements.txt` – Production dependencies
+- `requirements-dev.txt` – Development tools (pytest, black, etc.)
+:::
+
+:::info Cross-Platform Reality Check
+`requirements.txt` is portable for many projects, but it does **not** guarantee perfect cross-platform reproducibility.
+
+- ✅ Works well for pure Python packages
+- ✅ Works across machines with the same OS
+- ⚠️ Platform-specific packages (compiled extensions, GPU builds) may require different versions per OS
+- ⚠️ System libraries (CUDA, MKL) must exist on the target machine
+
+**Best practice:** Test on target platforms and use platform-specific files if needed:
+```bash
+requirements-linux.txt
+requirements-macos.txt
+requirements-windows.txt
+```
+:::
+
+---
+
+#### 6. Deactivate the Environment
+
+When done working:
+
+```bash
+deactivate
+```
+
+Your prompt returns to normal, and Python commands now use the system installation.
+
+---
+
+### Managing Multiple Projects
+
+Each project should have its own virtual environment:
+
+```bash
+~/projects/
+├── project-a/
+│   ├── .venv/
+│   ├── requirements.txt
+│   └── main.py
+├── project-b/
+│   ├── .venv/
+│   ├── requirements.txt
+│   └── app.py
+└── project-c/
+    ├── .venv/
+    ├── requirements.txt
+    └── server.py
+```
+
+**Never share virtual environments between projects.** This defeats the purpose of isolation.
+
+---
+
+### Quick Reference Commands
+
+```bash
+# Create environment
+python3 -m venv .venv
+
+# Activate
+source .venv/bin/activate
+
+# Deactivate
+deactivate
+
+# Install package
+pip install <package>
+
+# Install from requirements
+pip install -r requirements.txt
+
+# Save dependencies
+pip freeze > requirements.txt
+
+# Update all packages
+pip list --outdated
+pip install --upgrade <package>
+
+# Remove environment
+deactivate
+rm -rf .venv
+```
+
+---
+
+## Version Control Best Practices
+
+### What to Commit
+
+**Do commit:**
+- `requirements.txt` or `environment.yml` ✅ Portable with platform caveats
+- `requirements-dev.txt` (development dependencies) ✅ Portable with platform caveats
+- `.python-version` (if using pyenv) ✅ Cross-device compatible
+
+**Do NOT commit:**
+- `.venv/` directory ❌ Machine-specific, cannot be reused
+- `__pycache__/` directories ❌ Python bytecode cache
+- `*.pyc` files ❌ Compiled Python files
+- Conda environment directories ❌ Machine-specific
+
+### Cross-Device Usage
+
+**How to reproduce environments on a new machine:**
+
+**For `venv` users:**
+```bash
+# On the new machine
+git clone <your-repo>
+cd <your-repo>
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+**For `conda` users:**
+```bash
+# On the new machine
+git clone <your-repo>
+cd <your-repo>
+conda env create -f environment.yml
+conda activate <env-name>
+```
+
+**Key principle:** Configuration files are portable; environment directories are not.
+
+---
+
+### `.gitignore` Configuration
+
+Add to your `.gitignore`:
+
+```gitignore
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Conda
+.conda/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+```
+
+---
+
+## IDE Integration
+
+Modern IDEs automatically detect virtual environments:
+
+**VS Code:**
+1. Open project folder
+2. Press `Ctrl+Shift+P` (Cmd+Shift+P on macOS)
+3. Type "Python: Select Interpreter"
+4. Choose `.venv/bin/python` from the list
+
+**PyCharm:**
+1. Go to Settings → Project → Python Interpreter
+2. Click gear icon → Add
+3. Select "Existing environment"
+4. Browse to `.venv/bin/python`
+
+**Jupyter:**
+```bash
+# Install ipykernel in your environment
+pip install ipykernel
+
+# Register environment as Jupyter kernel
+python -m ipykernel install --user --name=myproject --display-name="Python (myproject)"
+```
+
+---
+
+## Troubleshooting
+
+### Virtual Environment Not Activating
+
+**Problem:** `source .venv/bin/activate` does nothing
+
+**Solution:**
+1. Verify the environment exists:
+   ```bash
+   ls .venv/bin/activate
+   ```
+
+2. Ensure you're using the correct activation script:
+   ```bash
+   # Bash/Zsh
+   source .venv/bin/activate
+
+   # Fish
+   source .venv/bin/activate.fish
+
+   # Csh
+   source .venv/bin/activate.csh
+   ```
+
+---
+
+### Wrong Python Version
+
+**Problem:** Virtual environment uses wrong Python version
+
+**Solution:**
+```bash
+# Remove old environment
+rm -rf .venv
+
+# Create with specific Python
+python3.11 -m venv .venv
+# or
+/usr/bin/python3.11 -m venv .venv
+```
+
+---
+
+### Package Installation Fails
+
+**Problem:** `pip install` fails with permission errors
+
+**Solution:**
+1. Ensure environment is activated (check prompt)
+2. Never use `sudo pip install` in a virtual environment
+3. Upgrade pip:
+   ```bash
+   pip install --upgrade pip
+   ```
+
+---
+
+### Conda Environment Conflicts
+
+**Problem:** Packages have dependency conflicts
+
+**Solution:**
+```bash
+# Try with explicit channels
+conda install -c conda-forge <package>
+
+# Or create fresh environment with all packages at once
+conda create -n newenv python=3.11 numpy pandas matplotlib scikit-learn
+```
+
+---
+
+## Next Steps
+
+With Python virtual environments configured, you now have:
+- Isolated project dependencies
+- Reproducible development environments
+- A foundation for team collaboration
+
+The next section covers **IDE Configuration**, where you'll integrate these environments with your code editor for seamless development.

@@ -1,0 +1,199 @@
+---
+title: Environment Setup
+---
+
+:::info Authors
+Writing Idea by [Jason Young (Zhengxin Yang)](https://jason-young.me)  
+Originally Created by [Luzhou Peng](https://github.com/Zrsion)  
+Generated and Polished by [ChatGPT](https://chat.openai.com)
+:::
+
+This section defines a **standard development and research environment** for
+reliable, reproducible work.
+
+The objective is not to exhaustively document every possible tool, platform, or
+configuration choice. Instead, this section specifies a **minimal, opinionated,
+and reproducible baseline** that has been validated across machines, projects,
+and usage scenarios commonly encountered in research and engineering workflows.
+
+The emphasis is on *reliability, predictability, and long-term maintainability*,
+rather than novelty or maximal feature coverage.
+
+---
+
+## Motivation and Scope
+
+Environment-related issues are a recurring source of friction in collaborative
+projects. Small inconsistencies in operating systems, shells, dependency
+managers, or editors can lead to:
+
+- irreproducible results,
+- fragile setup instructions,
+- excessive onboarding overhead, and
+- difficulty transferring projects across machines or users.
+
+The purpose of this section is to **minimize such friction** by explicitly
+documenting a shared environment contract. This contract establishes a common
+baseline that all other tutorials, recipes, and project-specific instructions
+can safely assume.
+
+This documentation is intended for:
+- researchers and developers setting up a new machine,
+- contributors onboarding into collaborative projects, and
+- anyone seeking a reference implementation of a clean environment stack.
+
+---
+
+## A Layered View of the Environment
+
+Rather than organizing the setup as a flat list of tools, we adopt a **layered
+model**. Each layer solves a distinct class of problems and depends on the layers
+below it.
+
+The environment setup is organized into the following layers:
+
+1. **Preliminaries**
+   Fundamental command-line concepts and filesystem assumptions that are
+   independent of any specific operating system or programming language.
+
+2. **Linux System Layer**
+   A Unix-like operating system environment that provides a POSIX-compatible
+   toolchain and execution context.
+
+3. **Shell Configuration Layer**
+   The interactive shell, responsible for command execution, environment
+   variables, secrets, proxy control, and activation of development tools.
+
+4. **Python Virtual Environment Layer**
+   Isolation of Python versions and dependencies on a per-project basis.
+
+5. **Integrated Development Environment (IDE)**
+   Editor, language tooling, debugging support, and remote development workflows.
+
+This decomposition is intentional. Each layer:
+- can be reasoned about independently,
+- admits multiple valid implementations, and
+- has clearly defined responsibilities and boundaries.
+
+---
+
+## Design Principles
+
+The recommendations in this section follow a small set of guiding principles:
+
+- **Stability over novelty**  
+  Prefer mature tools with predictable behavior and long support cycles.
+
+- **Minimal implicit dependencies**  
+  Avoid configurations that rely on undocumented side effects or hidden state.
+
+- **Reproducibility by default**  
+  Favor workflows that can be reconstructed on a new machine with minimal
+  ambiguity.
+
+- **Alignment with upstream standards**  
+  Stay close to widely adopted open-source conventions to reduce cognitive
+  overhead and tooling friction.
+
+These principles inform both the choice of defaults and the structure of the
+documentation.
+
+---
+
+## Recommended Defaults
+
+While each layer admits multiple valid choices, we recommend and document the
+following **default stack** throughout this guide:
+
+- **Linux system**  
+  WSL2 with Debian (for Windows users)
+
+- **Shell**  
+  Zsh with a shared dotfiles configuration
+
+- **Python environment**  
+  `conda` as the default path  
+  `venv` with `pip` as an optional alternative for minimal setups
+
+- **IDE**  
+  Visual Studio Code with remote development support
+
+These defaults were selected because they collectively provide:
+
+- long-term stability across updates,
+- clear separation of concerns between layers,
+- strong cross-platform support, and
+- compatibility with the majority of Python-based research and engineering
+  projects.
+
+The defaults are *opinionated by design*. They represent a carefully chosen
+baseline rather than a claim of universal optimality.
+
+---
+
+## Alternatives and Deviations
+
+Readers are free to substitute alternatives at any layer (e.g., a different
+Linux distribution, shell, environment manager, or editor), provided they
+understand the trade-offs involved.
+
+However, it is important to note that:
+
+- all subsequent documentation assumes the defaults above unless explicitly
+  stated otherwise;
+- deviations may require additional configuration not covered here; and
+- troubleshooting support implicitly targets the default stack.
+
+In other words, this section defines the **reference environment**, not an
+exhaustive compatibility matrix.
+
+---
+
+## How to Use This Section
+
+- If you are setting up a machine from scratch, follow the sections in order,
+  progressing layer by layer from top to bottom.
+- If you already have parts of the stack configured, each subsection can be read
+  independently as a focused reference.
+- If you are onboarding others, treat this section as a shared contract that
+  downstream instructions can rely on without repeating setup details.
+
+Once this environment baseline is in place, subsequent tutorials and recipes
+can focus on *substantive content* rather than setup mechanics.
+
+import DocCardList from '@theme/DocCardList';
+
+<DocCardList
+  items={[
+    {
+      type: 'link',
+      href: '/memo/onboarding_recipes/environment_setup/preliminaries',
+      label: 'Preliminaries',
+      description: 'Basic command-line concepts and filesystem assumptions.'
+    },
+    {
+      type: 'link',
+      href: '/memo/onboarding_recipes/environment_setup/windows_subsystem_for_linux',
+      label: 'Linux System (WSL + Debian)',
+      description: 'A stable Unix-like execution environment for development.'
+    },
+    {
+      type: 'link',
+      href: '/memo/onboarding_recipes/environment_setup/shell_configuration',
+      label: 'Shell Configuration',
+      description: 'Zsh, dotfiles, secrets, proxy control, and environment variables.'
+    },
+    {
+      type: 'link',
+      href: '/memo/onboarding_recipes/environment_setup/virtual_environment',
+      label: 'Python Virtual Environments',
+      description: 'Dependency isolation with conda (default) and venv (optional).'
+    },
+    {
+      type: 'link',
+      href: '/memo/onboarding_recipes/environment_setup/integrated_development_environment',
+      label: 'Integrated Development Environment',
+      description: 'VS Code, remote development, and interpreter integration.'
+    }
+  ]}
+/>

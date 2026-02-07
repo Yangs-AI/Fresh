@@ -1,0 +1,747 @@
+---
+title: Integrated Development Environment
+---
+
+:::info Authors
+Writing Idea by [Jason Young (Zhengxin Yang)](https://jason-young.me)  
+Originally Created by [Luzhou Peng](https://github.com/Zrsion)  
+Generated and Polished by [ChatGPT](https://chat.openai.com)
+:::
+
+This section guides you through setting up **Visual Studio Code** as your integrated development environment. You'll configure remote development, Python tooling, and workspace settings to work seamlessly with the shell and virtual environment layers you've already set up.
+
+<details>
+<summary><strong>📖 Design Philosophy and Architecture (Click to expand)</strong></summary>
+
+## Role of the IDE Layer
+
+The primary role of the IDE layer is **coordination**, not configuration. Specifically, the IDE:
+- offers a structured interface for code editing and navigation,
+- integrates language tooling (linting, formatting, diagnostics),
+- exposes terminals and debuggers in a unified workspace, and
+- connects user interaction to the underlying execution environment.
+
+Crucially, the IDE should **reflect** the state of lower layers rather than redefine them. Python versions, environment variables, and system paths must be managed outside the IDE and merely consumed here.
+
+---
+
+## Why an IDE Is Treated as a Separate Layer
+
+In many setups, the IDE is treated as the primary environment, with system and dependency configuration happening implicitly inside it. This guide intentionally avoids that approach.
+
+By treating the IDE as a separate, top-level layer:
+- environment state remains inspectable outside the editor,
+- workflows remain reproducible in non-IDE contexts (e.g. CI, servers),
+- debugging discrepancies between terminal and editor behavior is simplified,
+- switching editors does not require redefining the environment.
+
+The IDE becomes an **interface**, not an authority.
+
+---
+
+## Recommended IDE: Visual Studio Code
+
+This documentation standardizes on **Visual Studio Code** as the reference IDE. VS Code is selected because it:
+- is cross-platform and actively maintained,
+- integrates well with remote and containerized environments,
+- provides first-class Python tooling, and
+- exposes configuration through explicit, inspectable files.
+
+The choice of VS Code is pragmatic rather than ideological. Other editors may be used, but all examples and workflows in this guide assume VS Code unless explicitly stated otherwise.
+
+---
+
+## Remote Development and Environment Fidelity
+
+When developing on Windows, the recommended workflow is to use **remote development** rather than running tools directly on the host system. In this model:
+- the IDE UI runs on the host machine,
+- all execution occurs inside the Linux environment (e.g. WSL), and
+- the editor communicates with the environment through a well-defined interface.
+
+This approach ensures that:
+- code is executed in the same environment used by shell commands,
+- Python virtual environments behave consistently inside and outside the IDE,
+- filesystem and path semantics match server-side expectations.
+
+Remote development therefore preserves **environment fidelity** while retaining a native editing experience.
+
+---
+
+## Interaction with Shell and Python Environments
+
+The IDE layer depends on, but does not replace, the shell and virtual environment layers. In particular:
+- integrated terminals should invoke the same shell configured earlier,
+- Python interpreters selected in the IDE should point to explicitly created virtual environments,
+- environment activation should follow the same mechanisms used in standalone terminals.
+
+When discrepancies arise between IDE behavior and terminal behavior, the terminal is treated as the source of truth.
+
+---
+
+## Configuration Philosophy
+
+IDE configuration should follow the same principles applied to other layers:
+
+- **Explicit over implicit** – Settings should be visible in configuration files rather than hidden in UI state.
+- **Minimal over maximal** – Only essential extensions and settings should be enabled by default.
+- **Project-local when possible** – Project-specific IDE settings should live alongside the project, not in global configuration.
+
+This philosophy helps ensure that IDE behavior is understandable, shareable, and easy to reset.
+
+</details>
+
+---
+
+## Installation and Setup
+
+### Step 1: Install Visual Studio Code
+
+**On Windows:**
+1. Download from [https://code.visualstudio.com/](https://code.visualstudio.com/)
+2. Run the installer
+3. **Important:** During installation, check these options:
+   - ✅ Add "Open with Code" action to context menu
+   - ✅ Add to PATH (allows `code` command in terminal)
+
+**On Linux:**
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install code
+
+# Or download .deb from official website
+wget -O code.deb 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64'
+sudo dpkg -i code.deb
+```
+
+**On macOS:**
+```bash
+# Using Homebrew
+brew install --cask visual-studio-code
+```
+
+---
+
+### Step 2: Install Remote Development Extension (For WSL or SSH Users)
+
+If you're using WSL or remote SSH, remote development is essential for environment fidelity.
+
+**Install the extension:**
+1. Open VS Code on Windows
+2. Press `Ctrl+Shift+X` to open Extensions
+3. Search for "Remote Development"
+4. Install the extension pack (includes WSL, SSH, and Containers)
+
+Or install directly from a terminal where `code` is in your PATH (Windows, WSL, or Linux):
+```
+code --install-extension ms-vscode-remote.vscode-remote-extensionpack
+```
+
+---
+
+### Step 3: Connect to WSL
+
+**Method 1: From VS Code**
+1. Press `Ctrl+Shift+P` (Command Palette)
+2. Type "WSL: Connect to WSL"
+3. Select your WSL distribution
+
+**Method 2: From WSL Terminal**
+```bash
+# Inside WSL
+cd ~/projects/my-project
+code .
+```
+
+This opens VS Code on Windows, connected to the WSL filesystem.
+
+**Verify connection:**
+- Bottom-left corner should show: `WSL: Debian` (or your distro name)
+- Terminal inside VS Code should be your WSL shell
+
+---
+
+### Step 4: Install Python Extension
+
+**In your WSL-connected VS Code:**
+1. Press `Ctrl+Shift+X`
+2. Search for "Python"
+3. Install the official Python extension by Microsoft (`ms-python.python`)
+
+This extension provides:
+- IntelliSense (auto-completion)
+- Linting (error checking)
+- Debugging
+- Code formatting
+- Test discovery
+- Jupyter notebook support
+
+---
+
+## Configuring Python Interpreter
+
+### Select Python Interpreter
+
+After creating a virtual environment (`.venv`), tell VS Code to use it:
+
+1. **Open your project in VS Code:**
+   ```bash
+   cd ~/projects/my-project
+   code .
+   ```
+
+2. **Select interpreter:**
+   - Press `Ctrl+Shift+P`
+   - Type "Python: Select Interpreter"
+   - Choose `./.venv/bin/python` or similar from the list
+
+   Or manually enter path:
+   - Select "Enter interpreter path..."
+   - Browse to `/home/username/projects/my-project/.venv/bin/python`
+
+3. **Verify selection:**
+   - Bottom-right corner shows: `Python 3.x.x ('.venv': venv)`
+   - Open integrated terminal (`Ctrl+`\`) - should show `(.venv)` in prompt
+
+---
+
+### For Conda Environments
+
+If using Conda:
+
+1. Ensure Conda is initialized in your shell (see [Shell Configuration](../02_shell_configuration))
+
+2. Select interpreter:
+   - Press `Ctrl+Shift+P` → "Python: Select Interpreter"
+   - Look for `Python 3.x.x ('myproject': conda)` in the list
+
+3. Or find Conda interpreter manually:
+   ```bash
+   # Find interpreter path
+   conda activate myproject
+   which python
+   # Use this path in VS Code
+   ```
+
+---
+
+## Workspace Configuration
+
+VS Code uses two levels of configuration:
+- **User Settings** - Global, applies to all projects
+- **Workspace Settings** - Project-specific, stored in `.vscode/settings.json`
+
+### Create Workspace Settings
+
+Create `.vscode/settings.json` in your project root:
+
+```json
+{
+  // Python interpreter
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+
+  // Linting
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": ["--max-line-length=100"],
+
+  // Formatting
+  "python.formatting.provider": "black",
+  "python.formatting.blackArgs": ["--line-length", "100"],
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+
+  // Testing
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+
+  // Terminal
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "terminal.integrated.cwd": "${workspaceFolder}",
+
+  // Files
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/.pytest_cache": true
+  }
+}
+```
+
+:::tip Cross-Device Compatibility
+**`.vscode/` configuration files are fully cross-device compatible.**
+
+- ✅ Commit `.vscode/settings.json`, `launch.json`, `tasks.json`, `extensions.json`
+- ✅ Use relative paths like `${workspaceFolder}` instead of absolute paths
+- ✅ Works consistently across Linux, macOS, and Windows (with WSL)
+- ⚠️ For WSL users: Use WSL paths (`/home/user/...`) in settings, not Windows paths (`C:\Users\...`)
+- ⚠️ Some extensions may need to be installed separately in WSL vs local
+
+**Commit `.vscode/settings.json` to version control to share configuration with your team.**
+:::
+
+---
+
+### Install Python Development Tools
+
+Install linting and formatting tools in your virtual environment:
+
+```bash
+# Activate environment
+source .venv/bin/activate
+
+# Install tools
+pip install black flake8 pylint mypy pytest isort
+
+# Save to requirements-dev.txt
+pip freeze | grep -E "black|flake8|pylint|mypy|pytest|isort" > requirements-dev.txt
+```
+
+---
+
+## Essential Extensions
+
+### Core Python Development
+
+```bash
+# Install from terminal (if code is in PATH)
+code --install-extension ms-python.python
+code --install-extension ms-python.vscode-pylance
+```
+
+**Recommended Python extensions:**
+- **Python** (`ms-python.python`) - Core Python support
+- **Pylance** (`ms-python.vscode-pylance`) - Fast IntelliSense
+- **Python Indent** (`KevinRose.vsc-python-indent`) - Better indentation
+- **autoDocstring** (`njpwerner.autodocstring`) - Docstring generator
+
+---
+
+### Git Integration
+
+```bash
+code --install-extension eamodio.gitlens
+```
+
+**Git extensions:**
+- **GitLens** (`eamodio.gitlens`) - Enhanced Git capabilities
+- **Git Graph** (`mhutchie.git-graph`) - Visualize commit history
+
+---
+
+### General Development
+
+**Recommended for all users:**
+- **Remote Development** (`ms-vscode-remote.vscode-remote-extensionpack`) - WSL/SSH/Container support
+- **Markdown All in One** (`yzhang.markdown-all-in-one`) - Markdown editing
+- **Better Comments** (`aaron-bond.better-comments`) - Highlight different comment types
+- **Error Lens** (`usernamehw.errorlens`) - Inline error messages
+
+---
+
+## Debugging Configuration
+
+### Basic Python Debugging
+
+Create `.vscode/launch.json` for debugging:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Python: Module",
+      "type": "python",
+      "request": "launch",
+      "module": "your_module_name",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Python: Debug Tests",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-v"],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}
+```
+
+:::tip Module mode
+The `"module"` field runs a module with `python -m <module>`. For example, set
+`"module": "my_pkg.cli"` to run `python -m my_pkg.cli` instead of a file path.
+:::
+
+**Using the debugger:**
+1. Set breakpoints by clicking left of line numbers
+2. Press `F5` or Run → Start Debugging
+3. Use debug controls:
+   - `F5` - Continue
+   - `F10` - Step Over
+   - `F11` - Step Into
+   - `Shift+F11` - Step Out
+   - `Ctrl+Shift+F5` - Restart
+   - `Shift+F5` - Stop
+
+---
+
+### Debug Console
+
+During debugging, use the Debug Console to:
+```python
+# Evaluate expressions
+variable_name
+len(my_list)
+
+# Execute code
+my_var = 42
+print(f"Value is {my_var}")
+```
+
+---
+
+## Terminal Integration
+
+### Open Integrated Terminal
+
+- Press `` Ctrl+` `` (backtick)
+- Or: View → Terminal
+- Or: `Ctrl+Shift+P` → "Terminal: Create New Terminal"
+
+**Terminal features:**
+- Opens in workspace directory by default
+- Uses your configured shell (Zsh from earlier setup)
+- Inherits environment variables
+- Multiple terminals can be open simultaneously
+
+---
+
+### Terminal Profiles
+
+Configure multiple terminal profiles in settings:
+
+```json
+{
+  "terminal.integrated.profiles.linux": {
+    "zsh": {
+      "path": "/bin/zsh"
+    },
+    "bash": {
+      "path": "/bin/bash"
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "zsh"
+}
+```
+
+Switch profiles: Click the `+` dropdown in terminal panel.
+
+---
+
+## Keyboard Shortcuts
+
+### Essential Shortcuts
+
+**General:**
+- `Ctrl+Shift+P` - Command Palette
+- `Ctrl+P` - Quick Open (files)
+- `Ctrl+,` - Settings
+- `Ctrl+B` - Toggle Sidebar
+- `` Ctrl+` `` - Toggle Terminal
+
+**Editing:**
+- `Ctrl+/` - Toggle comment
+- `Alt+↑/↓` - Move line up/down
+- `Shift+Alt+↑/↓` - Copy line up/down
+- `Ctrl+D` - Select next occurrence
+- `Ctrl+Shift+L` - Select all occurrences
+
+**Python-specific:**
+- `F12` - Go to Definition
+- `Alt+F12` - Peek Definition
+- `Shift+F12` - Find All References
+- `F2` - Rename Symbol
+- `Ctrl+Space` - Trigger IntelliSense
+- `Shift+Alt+F` - Format Document
+
+**Navigation:**
+- `Ctrl+G` - Go to Line
+- `Ctrl+T` - Go to Symbol in Workspace
+- `Ctrl+Shift+O` - Go to Symbol in File
+- `Ctrl+Tab` - Switch between open files
+
+---
+
+## Working with Jupyter Notebooks
+
+VS Code has native Jupyter support:
+
+1. **Install Jupyter extension:**
+   ```bash
+   code --install-extension ms-toolsai.jupyter
+   ```
+
+2. **Create notebook:**
+   - Create file with `.ipynb` extension
+   - Or: Command Palette → "Jupyter: Create New Notebook"
+
+3. **Select kernel:**
+   - Click kernel name in top-right
+   - Choose your Python interpreter (e.g., `.venv/bin/python`)
+
+4. **Run cells:**
+   - `Shift+Enter` - Run cell and move to next
+   - `Ctrl+Enter` - Run cell
+   - `Alt+Enter` - Run cell and insert below
+
+---
+
+## Project Structure Best Practices
+
+### Recommended `.vscode/` Contents
+
+```bash
+.vscode/
+├── settings.json       # Workspace settings
+├── launch.json         # Debug configurations
+├── tasks.json          # Build/test tasks
+└── extensions.json     # Recommended extensions
+```
+
+### Share Recommended Extensions
+
+Create `.vscode/extensions.json`:
+
+```json
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-toolsai.jupyter",
+    "eamodio.gitlens"
+  ]
+}
+```
+
+When teammates open the project, VS Code will suggest installing these extensions.
+
+---
+
+## Troubleshooting
+
+### Python Interpreter Not Found
+
+**Problem:** VS Code can't find Python interpreter
+
+**Solution:**
+1. Verify environment exists:
+   ```bash
+   ls .venv/bin/python
+   ```
+
+2. Manually set interpreter:
+   - `Ctrl+Shift+P` → "Python: Select Interpreter"
+   - "Enter interpreter path..."
+   - Enter full path: `/home/username/projects/my-project/.venv/bin/python`
+
+3. Reload VS Code:
+   - `Ctrl+Shift+P` → "Developer: Reload Window"
+
+---
+
+### IntelliSense Not Working
+
+**Problem:** Auto-completion doesn't work
+
+**Solution:**
+1. Ensure Pylance is installed:
+   ```bash
+   code --install-extension ms-python.vscode-pylance
+   ```
+
+2. Check Python interpreter is selected (bottom-right corner)
+
+3. Install type stubs:
+   ```bash
+   pip install types-requests  # Example for requests library
+   ```
+
+4. Restart Python language server:
+   - `Ctrl+Shift+P` → "Python: Restart Language Server"
+
+---
+
+### Terminal Not Using Correct Shell
+
+**Problem:** Terminal opens with bash instead of zsh
+
+**Solution:**
+Add to workspace settings:
+```json
+{
+  "terminal.integrated.defaultProfile.linux": "zsh"
+}
+```
+
+Or set user settings:
+1. `Ctrl+,` → Search "terminal default profile"
+2. Set to `zsh`
+
+---
+
+### Linter Not Running
+
+**Problem:** Flake8/Pylint doesn't show errors
+
+**Solution:**
+1. Install linter in virtual environment:
+   ```bash
+   source .venv/bin/activate
+   pip install flake8
+   ```
+
+2. Enable in settings:
+   ```json
+   {
+     "python.linting.enabled": true,
+     "python.linting.flake8Enabled": true
+   }
+   ```
+
+3. Check Output panel:
+   - View → Output
+   - Select "Python" from dropdown
+   - Look for error messages
+
+---
+
+### WSL Connection Issues
+
+**Problem:** Can't connect to WSL from VS Code
+
+**Solution:**
+1. Ensure WSL is running:
+   ```bash
+   wsl -l -v  # Should show "Running"
+   ```
+
+2. Restart VS Code
+
+3. Reinstall Remote-WSL extension:
+   - Extensions → Remote-WSL → Uninstall
+   - Reload VS Code
+   - Reinstall extension
+
+4. Check Windows Firewall isn't blocking connection
+
+---
+
+## Advanced Tips
+
+### Multiple Python Environments
+
+Switch between environments per project:
+- Each project has its own `.vscode/settings.json` with `python.defaultInterpreterPath`
+- VS Code remembers interpreter selection per workspace
+
+---
+
+### Custom Tasks
+
+Create `.vscode/tasks.json` for common operations:
+
+```json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Tests",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": ["-m", "pytest", "-v"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Format Code",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/black",
+      "args": ["${workspaceFolder}"]
+    }
+  ]
+}
+```
+
+Run tasks: `Ctrl+Shift+P` → "Tasks: Run Task"
+
+---
+
+### Settings Sync
+
+Sync your VS Code settings across devices:
+1. `Ctrl+Shift+P` → "Settings Sync: Turn On"
+2. Sign in with GitHub/Microsoft account
+3. Choose what to sync (settings, extensions, keybindings)
+
+Note: This syncs **user settings**, not workspace settings.
+
+---
+
+## Verify Your Setup
+
+Run through this checklist:
+
+```bash
+# ✅ VS Code installed and accessible
+code --version
+
+# ✅ In WSL, opening VS Code connects remotely
+cd ~/projects/test-project
+code .
+# Check bottom-left: Shows "WSL: Ubuntu"
+
+# ✅ Python extension installed
+# Check Extensions panel for "Python" by Microsoft
+
+# ✅ Python interpreter selected
+# Check bottom-right corner
+
+# ✅ Terminal uses correct shell
+# Open terminal: Ctrl+` 
+# Check prompt shows zsh prompt from earlier setup
+
+# ✅ IntelliSense works
+# Open .py file, type "import ", should see suggestions
+
+# ✅ Linting works
+# Write invalid Python syntax, should see red squiggles
+```
+
+---
+
+## Next Steps
+
+With VS Code properly configured, you now have:
+- A unified interface for code editing and execution
+- Seamless integration with your shell and Python environments
+- Debugging capabilities
+- Consistent behavior between IDE and terminal
+
+Your environment setup is now complete! You can proceed to project-specific workflows with confidence that your development environment is solid, reproducible, and portable across devices.
