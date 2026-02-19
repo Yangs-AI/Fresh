@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Yangs-AI/Fresh/refs/heads/main/FreshDocs/static/img/logo.svg" alt="Fresh Logo" width="160"/>
+   <img src="./FreshDocs/static/img/logo.svg" alt="Fresh Logo" width="160"/>
 </p>
 
 <h1 align="center">Fresh</h1>
@@ -74,13 +74,7 @@ If you have a useful visualization snippet, LaTeX code, or writing assets, you c
    git commit -m "Add: new visualization component for dataset analysis"
    git push origin new-feature
    ```
-8. **Commit and push** your changes:
-   ```bash
-   git add .
-   git commit -m "Add: new visualization component for dataset analysis"
-   git push origin new-feature
-   ```
-9. **Open a Pull Request** back to `main`:
+8. **Open a Pull Request** back to `main`:
    - Provide a short, descriptive title.
    - Include context and reference if relevant.
 
