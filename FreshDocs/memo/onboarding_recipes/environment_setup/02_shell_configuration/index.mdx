@@ -290,7 +290,9 @@ If your proxy requires authentication, `proxy_on` will prompt for username and p
 :::tip
 If you've configured `.wslconfig` with `autoProxy=true` (see [WSL Configuration](/memo/onboarding_recipes/environment_setup/windows_subsystem_for_linux#wsl-configuration)), most applications will automatically use Windows proxy settings. The `proxy_on` function is mainly for command-line tools like `curl`, `wget`, `git`, and `apt`.
 
-For detailed proxy server setup (V2RayN, v2rayA), see our [Forward Proxy Client Setup](/memo/miscellaneous_recipes/proxy_solutions/forward_proxy/client_setup) guide.
+It is recommended to use some form of proxy if you're behind a corporate firewall or need access to restricted resources for research purposes. We do not recommend bypassing network restrictions without proper authorization. Thus this guide assumes you have a legitimate proxy server available (e.g., provided by your institution or a trusted service).
+
+How to set up a proxy server is outside the scope of this guide
 :::
 
 ---
@@ -530,7 +532,7 @@ Then set your terminal to use a Powerline font (e.g., "DejaVu Sans Mono for Powe
 - [Zsh Documentation](https://zsh.sourceforge.io/Doc/)
 - [Oh My Zsh Themes](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
 - [Oh My Zsh Plugins](https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins)
-- [Forward Proxy Client Setup](/memo/miscellaneous_recipes/proxy_solutions/forward_proxy/client_setup) - For detailed proxy setup with V2Ray
+- Forward Proxy Client Setup (secret site, internal access only) - For detailed proxy setup with V2Ray
 
 ---
 
