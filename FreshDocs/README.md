@@ -201,7 +201,7 @@ Required secret for mirror publishing:
 Mirror file mapping:
 
 - `package-public.json` -> `package.json` (in public mirror)
-- `docusaurus.config.public.ts` -> `docusaurus.config.ts` (in public mirror)
+- `docusaurus.config.mirror.ts` -> `docusaurus.config.ts` (in public mirror)
 - `README-public.md` (repo root) -> `README.md` (public mirror root)
 
 Single source of truth note:
