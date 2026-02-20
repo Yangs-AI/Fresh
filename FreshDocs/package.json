@@ -1,6 +1,6 @@
 {
-  "name": "website-public",
-  "version": "0.0.0",
+  "name": "FreshDocs-Public",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",

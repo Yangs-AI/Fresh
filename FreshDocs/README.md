@@ -53,15 +53,12 @@ Most changes are reflected live without restarting the server.
 
 ## Build
 
-### Dual-site Build (Public + Secret)
+### Build Modes (Secret + Mirror Package)
 
-This repository supports two independent builds from the same content source:
+This repository now uses one deployment build and one mirror packaging step:
 
-- `npm run build:public` → exports only documents with `visibility: public`, then builds to `build-public`
 - `npm run build:secret` → builds full content to `build-secret`
-- `npm run build:dual` → builds both
-
-Public filtering logic is implemented in `scripts/public.ts` and public build config is `docusaurus.config.public.ts`.
+- `npm run prepare:mirror` → exports only documents with `visibility: public` into `.public/` for mirror sync
 
 For strict security, treat docs as secret unless explicitly marked public.
 
@@ -88,11 +85,11 @@ visibility: public
 	- `FRESH_MIRROR_APP_PRIVATE_KEY`
 - Public mirror package manifest is `package-public.json` and will be synced as `package.json` in `Yangs-AI/Fresh`.
 
-## Explanation of Dual-site Architecture
-This project uses a **single secret repository** as source of truth and generates two independent sites:
+## Explanation of Architecture
+This project uses `Yangs-AI/Fresh-Secret` as source of truth:
 
-- `public.fresh.research.jason-young.me` (public only)
-- `secret.fresh.research.jason-young.me` (full content, gateway-protected)
+- This repository deploys only `secret.fresh.research.jason-young.me` (full content, gateway-protected).
+- Public content is synced to `Yangs-AI/Fresh` (mirror repository), and the mirror repository is responsible for public-site deployment.
 
 ### Why this model
 
@@ -122,7 +119,7 @@ visibility: secret
 
 Rules in this repository:
 
-- `visibility: public` => included in public build
+- `visibility: public` => included in mirror package export
 - `visibility: secret` or missing visibility => secret-only
 - `access: [...]` => treated as secret-only in public export
 
@@ -131,15 +128,15 @@ Rules in this repository:
 Run from `FreshDocs/`:
 
 ```bash
-npm run build:public
 npm run build:secret
-npm run build:dual
+npm run prepare:mirror
 ```
 
-`build:public` first runs content export script (`scripts/public.ts`) and then builds with `docusaurus.config.public.ts`.
+`prepare:mirror` runs `scripts/public.ts` and exports the public subset into `.public/`.
 
 ### Deployment Strategy Recommendation
-This project is designed to be deployed on Anywhere with a static file hosting service for the public site and a gateway-protected hosting for the secret site.
+This project is designed with gateway-protected hosting for the secret site.
+Public site hosting should be configured in the mirror repository.
 Below is a recommended deployment architecture:
 
 #### Access control
@@ -158,7 +155,7 @@ Suggested stack:
 #### Security checklist
 
 - Main docs repository (`Fresh-Secret`) is secret.
-- Public pipeline only deploys `build-public` artifacts.
+- This repository deploys only `build-secret` artifacts.
 - Secret site has `noindex` to prevent indexing and private cache policy.
 - Public and Secret search indexes are isolated.
 - Secret static assets are served only behind auth gateway.
@@ -167,18 +164,13 @@ Suggested stack:
 
 Workflow template: `.github/workflows/build.yml`
 
-- `build-public`: builds public artifact
 - `build-secret`: builds secret artifact
-- `deploy`: placeholder for your infra deployment steps
+- `prepare-mirror-package`: exports public subset for mirror sync
+- `deploy-secret`: deploys secret site
 
 #### Public mirror policy
 
 Do **not** push secret source files to the public repository.
-
-Use one of these strategies:
-
-1. Artifact mirror (recommended): publish only `build-public` static output.
-2. Source mirror: CI exports only public-marked docs to a dedicated public repo.
 
 #### Repository policy
 
@@ -188,10 +180,8 @@ Use one of these strategies:
 #### Development workflow
 
 - Daily development happens in `Fresh-Secret` on branch `main`.
-- CI builds both outputs:
-	- `build-public` (public-only)
-	- `build-secret` (full content)
-- CI publishes `build-public` to `Yangs-AI/Fresh` branch `main` as public mirror.
+- CI builds `build-secret` (full content) in this repository.
+- CI exports `.public` content and syncs it to `Yangs-AI/Fresh` as public mirror source.
 
 Required secret for mirror publishing:
 
@@ -202,9 +192,9 @@ Mirror file mapping:
 
 - `package-public.json` -> `package.json` (in public mirror)
 - `docusaurus.config.mirror.ts` -> `docusaurus.config.ts` (in public mirror)
-- `README-public.md` (repo root) -> `README.md` (public mirror root)
+- `README-Public.md` (repo root) -> `README.md` (public mirror root)
 
 Single source of truth note:
 
-- Public root README content is maintained in `README-public.md` in `Fresh-Secret`.
+- Public root README content is maintained in `README-Public.md` in `Fresh-Secret`.
 - Do not manually edit root `README.md` in `Yangs-AI/Fresh`; CI will overwrite it on next sync.

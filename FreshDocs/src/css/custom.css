@@ -52,16 +52,11 @@
 
 .copyright-link {
   font-weight: 700;
-  background: linear-gradient(135deg, var(--ifm-color-primary-light), var(--ifm-color-primary-lighter), var(--ifm-color-primary-lightest));
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--ifm-color-primary-dark);
   text-decoration: none;
   position: relative;
-  transition: all 0.3s ease;
-  text-shadow: 0 0 20px rgba(220, 175, 248, 0.3);
-  animation: gradient-shift 3s ease infinite;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+  text-shadow: none;
 }
 
 @keyframes gradient-shift {
@@ -110,9 +105,7 @@
 }
 
 .copyright-link:hover {
-  transform: translateY(-2px) scale(1.05);
-  text-shadow: 0 0 30px rgba(220, 175, 248, 0.6);
-  animation-play-state: paused;
+  text-shadow: 0 0 10px rgba(220, 175, 248, 0.25);
 }
 
 .copyright-link:hover::before {
@@ -125,12 +118,13 @@
 }
 
 [data-theme='dark'] .copyright-link {
-  background: linear-gradient(135deg, var(--ifm-color-primary-lighter), var(--ifm-color-primary-lightest), #fff);
-  text-shadow: 0 0 25px rgba(220, 175, 248, 0.5);
+  color: #ffffff;
+  text-shadow: none;
 }
 
 [data-theme='dark'] .copyright-link:hover {
-  text-shadow: 0 0 35px rgba(220, 175, 248, 0.8);
+  color: var(--ifm-color-primary-lightest);
+  text-shadow: 0 0 12px rgba(220, 175, 248, 0.35);
 }
 
 @font-face {
@@ -150,16 +144,16 @@
 
 
 @font-face {
-font-family: 'DubaiWeb Medium';
-font-style: normal;
-font-weight: normal;
-src: local('Dubai Medium'), url('/fonts/Dubai-Medium.woff') format('woff');
+  font-family: 'DubaiWeb Medium';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Dubai Medium'), url('/fonts/Dubai-Medium.woff') format('woff');
 }
 
 
 @font-face {
-font-family: 'DubaiWeb Bold';
-font-style: normal;
-font-weight: normal;
-src: local('Dubai Bold'), url('/fonts/Dubai-Bold.woff') format('woff');
+  font-family: 'DubaiWeb Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Dubai Bold'), url('/fonts/Dubai-Bold.woff') format('woff');
 }
