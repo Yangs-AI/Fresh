@@ -77,7 +77,6 @@ const config: Config = {
         routeBasePath: 'memo',
         disableVersioning: false,
         showLastUpdateTime: true,
-        showLastUpdateAuthor: true,
       },
     ],
     [
