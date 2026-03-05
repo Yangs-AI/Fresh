@@ -113,6 +113,8 @@ const config: Config = {
       logo: {
         alt: 'Friendly Research Resources Hub',
         src: 'img/logo.svg',
+        href: 'https://fresh.research.jason-young.me',
+        target: '_self',
       },
       items: [
         {
