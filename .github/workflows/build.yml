@@ -8,6 +8,7 @@ on:
       - "FreshDocs/**"
       - "Tools/**"
       - ".github/workflows/build.yml"
+      - "docusaurus.config.ts"
   workflow_dispatch:
 
 jobs:
