@@ -3,6 +3,7 @@
 
 # Production
 /build
+/build-mirror
 
 # Generated files
 .docusaurus

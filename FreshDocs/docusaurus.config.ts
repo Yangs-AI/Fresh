@@ -1,9 +1,59 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import {writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {createAdvancedSchemaPlugin} from './scripts/advancedSchemaPlugin';
 
 const publicRepoUrl = process.env.PUBLIC_REPO_URL ?? 'https://github.com/Yangs-AI/Fresh';
 const publicEditUrl = process.env.PUBLIC_EDIT_URL ?? `${publicRepoUrl}/tree/main/FreshDocs`;
+const siteUrl = 'https://public.fresh.research.jason-young.me';
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Fresh',
+  url: siteUrl,
+  description: 'Friendly Research Resources Hub',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${siteUrl}/search?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Yangs AI Research Group',
+    url: 'https://yangs.ai',
+  },
+};
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Yangs AI Research Group',
+  url: 'https://yangs.ai',
+  logo: `${siteUrl}/img/logo.svg`,
+  sameAs: [publicRepoUrl, 'https://yangs.ai', 'https://jason-young.me'],
+};
+
+const webPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Fresh Home',
+  url: `${siteUrl}/`,
+  description: 'Friendly Research Resources Hub',
+  inLanguage: 'en',
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'Fresh',
+    url: siteUrl,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Yangs AI Research Group',
+    url: 'https://yangs.ai',
+  },
+};
 
 const config: Config = {
   title: 'Fresh',
@@ -14,7 +64,7 @@ const config: Config = {
     v4: true,
   },
 
-  url: 'https://public.fresh.research.jason-young.me',
+  url: siteUrl,
   baseUrl: '/',
 
   organizationName: 'Yangs-AI',
@@ -42,6 +92,11 @@ const config: Config = {
       {
         docs: false,
         blog: false,
+        sitemap: {
+          changefreq: 'weekly',
+          priority: 0.5,
+          filename: 'sitemap.xml',
+        },
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -50,11 +105,38 @@ const config: Config = {
   ],
 
   plugins: [
+    function robotsTxtPlugin() {
+      return {
+        name: 'robots-txt-plugin',
+        postBuild({outDir}: {outDir: string}) {
+          const robotsTxt = [
+            'User-agent: *',
+            'Allow: /',
+            `Sitemap: ${siteUrl}/sitemap.xml`,
+          ].join('\n');
+
+          writeFileSync(join(outDir, 'robots.txt'), `${robotsTxt}\n`, 'utf-8');
+        },
+      };
+    },
     function htmlAssetPlugin() {
       return {
         name: 'html-asset-plugin',
         configureWebpack() {
           return {
+            resolve: {
+              alias: {
+                'vscode-languageserver-types/lib/umd/main.js':
+                  'vscode-languageserver-types/lib/esm/main.js',
+              },
+            },
+            ignoreWarnings: [
+              {
+                module: /vscode-languageserver-types[\\/]lib[\\/]umd[\\/]main\.js$/,
+                message:
+                  /Critical dependency: require function is used in a way in which dependencies cannot be statically extracted/,
+              },
+            ],
             module: {
               rules: [
                 {
@@ -67,6 +149,12 @@ const config: Config = {
         },
       };
     },
+    createAdvancedSchemaPlugin({
+      siteUrl,
+      siteName: 'Fresh',
+      publisherName: 'Yangs AI Research Group',
+      publisherUrl: 'https://yangs.ai',
+    }),
     [
       '@docusaurus/plugin-content-docs',
       {
@@ -190,7 +278,44 @@ const config: Config = {
       theme: prismThemes.oceanicNext,
       darkTheme: prismThemes.duotoneDark,
     },
+    metadata: [
+      {name: 'description', content: 'Friendly Research Resources Hub'},
+      {name: 'keywords', content: 'research, docs, memo, knowledge base, yangs-ai'},
+      {property: 'og:type', content: 'website'},
+      {property: 'og:site_name', content: 'Fresh'},
+      {property: 'og:title', content: 'Fresh - Friendly Research Resources Hub'},
+      {property: 'og:description', content: 'Friendly Research Resources Hub'},
+      {property: 'og:url', content: siteUrl},
+      {property: 'og:image', content: `${siteUrl}/img/fresh-social-card.jpg`},
+      {name: 'twitter:card', content: 'summary_large_image'},
+      {name: 'twitter:title', content: 'Fresh - Friendly Research Resources Hub'},
+      {name: 'twitter:description', content: 'Friendly Research Resources Hub'},
+      {name: 'twitter:image', content: `${siteUrl}/img/fresh-social-card.jpg`},
+    ],
   } satisfies Preset.ThemeConfig,
+  headTags: [
+    {
+      tagName: 'script',
+      attributes: {
+        type: 'application/ld+json',
+      },
+      innerHTML: JSON.stringify(websiteSchema),
+    },
+    {
+      tagName: 'script',
+      attributes: {
+        type: 'application/ld+json',
+      },
+      innerHTML: JSON.stringify(organizationSchema),
+    },
+    {
+      tagName: 'script',
+      attributes: {
+        type: 'application/ld+json',
+      },
+      innerHTML: JSON.stringify(webPageSchema),
+    },
+  ],
 };
 
 export default config;
