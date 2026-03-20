@@ -1,0 +1,310 @@
+---
+title: Free TLS Certificate Issuance
+tags: [nginx, acme.sh, Let's Encrypt, TLS, SSL, HTTPS]
+fresh_types: [miss, memo]
+visibility: public
+---
+
+# Free TLS Certificate Issuance
+
+This guide walks through obtaining a free TLS certificate via **[acme.sh](https://github.com/acmesh-official/acme.sh)** from **Let's Encrypt**, using **nginx** as the web server. The example domain throughout is `example.com` — replace it with your own domain wherever you see it.
+
+:::danger Run acme.sh as root
+acme.sh must be installed and all subsequent `acme.sh` commands must be executed as **root** (or with `sudo -i` to open a root shell first). Running as a non-root user will fail when writing to `/etc/ssl/` and when reloading nginx.
+:::
+
+---
+
+## Prerequisites
+
+- A Linux server with **nginx** installed and running
+- A domain whose DNS **A record** already points to this server's IP
+- Root or sudo access
+
+---
+
+## Identifying Your Starting Point
+
+:::tip Before you begin — two scenarios
+- **Fresh machine**: nginx has no TLS config yet, acme.sh is not installed. Follow all steps in order.
+- **Machine with existing certificates**: nginx is already serving HTTPS for other domains and acme.sh is already installed. In Step 1, only the **domain-specific cert directory** needs to be created (the webroot setup can be skipped). Steps 2, 4, and 5 can also be skipped. Jump to [Step 3](#step-3--create-an-http-only-virtual-host-for-the-new-domain) after creating the cert directory.
+:::
+
+---
+
+## Step 1 — Prepare the Webroot and Certificate Directories
+
+Two distinct directories are needed. They serve different purposes and have different skip rules for existing machines.
+
+**Webroot** — where acme.sh writes ACME challenge tokens. nginx must be able to read this path:
+
+```bash
+mkdir -p /var/www/lets-encrypt/
+sudo chown -R www-data:www-data /var/www/lets-encrypt/
+sudo chmod -R 755 /var/www/lets-encrypt/
+```
+
+**Domain certificate store** — where the issued certificate files will live. This directory is domain-specific and **must be created for every new domain**, even on machines that already have other certificates:
+
+```bash
+mkdir -p /etc/ssl/lets-encrypt/example.com/
+```
+
+:::note For machines with existing certificates
+The webroot `/var/www/lets-encrypt/` and its permissions are almost certainly already set up. Verify:
+```bash
+ls /var/www/lets-encrypt/
+```
+If the directory exists, skip the webroot block above. **Do not skip** the `mkdir` for `/etc/ssl/lets-encrypt/example.com/` — that directory is new for every domain.
+:::
+
+---
+
+## Step 2 — Create the Shared ACME Challenge Include
+
+Put the challenge location block in a reusable include file so every virtual host can reference it without duplication:
+
+```bash
+mkdir -p /etc/nginx/includes
+vim /etc/nginx/includes/lets-encrypt
+```
+
+Paste the following content:
+
+```nginx
+location /.well-known/acme-challenge/ {
+    allow all;
+    expires -1;
+    add_header Cache-Control no-store;
+    alias /var/www/lets-encrypt/.well-known/acme-challenge/;
+}
+```
+
+:::note For machines with existing certificates
+The `/etc/nginx/includes/lets-encrypt` file is almost certainly already present. Verify:
+```bash
+ls /etc/nginx/includes/lets-encrypt
+```
+If it exists, skip Step 2 and proceed to Step 3.
+:::
+
+---
+
+## Step 3 — Create an HTTP-Only Virtual Host for the New Domain
+
+Before a certificate exists, nginx must serve the ACME challenge over plain HTTP. Create a minimal virtual host:
+
+```bash
+vim /etc/nginx/sites-available/example.com
+```
+
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com;
+
+    access_log /dev/null;
+    error_log /dev/null emerg;
+
+    include includes/lets-encrypt;
+}
+```
+
+Activate the site and reload nginx:
+
+```bash
+ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled
+
+sudo nginx -t
+sudo service nginx reload
+```
+
+:::warning `default` listener conflict
+If another virtual host already uses `listen 80 default`, remove the `default` keyword from the block above — only one virtual host may claim the default server per address. On machines with existing certificates this is almost always the case, so use plain `listen 80;` as shown.
+:::
+
+---
+
+## Step 4 — Install acme.sh
+
+:::note For machines with existing certificates
+acme.sh is almost certainly already installed. Check with `sudo acme.sh --version`. If it exists, skip this step entirely.
+:::
+
+Run as **root** (or open a root shell with `sudo -i` first):
+
+```bash
+curl https://get.acme.sh | sh -s email=you@example.com
+```
+
+After installation, open a new shell (or `source /root/.bashrc`) so that the `acme.sh` alias is available in the root environment.
+
+---
+
+## Step 5 — Bootstrap acme.sh
+
+:::note For machines with existing certificates
+These global settings only need to be applied once per machine. They persist in `/root/.acme.sh/account.conf`. Skip this step if acme.sh was already configured.
+:::
+
+Enable auto-upgrade so acme.sh keeps itself current:
+
+```bash
+sudo acme.sh --upgrade --auto-upgrade
+```
+
+Switch the default CA to Let's Encrypt (acme.sh v3+ defaults to ZeroSSL):
+
+```bash
+sudo acme.sh --set-default-ca --server letsencrypt
+```
+
+---
+
+## Step 6 — Issue the Certificate
+
+With nginx serving the challenge path, ask Let's Encrypt to issue a certificate for the domain. The `--debug 2` flag provides verbose output that is invaluable when troubleshooting:
+
+```bash
+sudo acme.sh --issue -d example.com -w /var/www/lets-encrypt/ --debug 2
+```
+
+A successful run ends with lines similar to:
+
+```
+[info] Your cert is in: /root/.acme.sh/example.com/example.com.cer
+[info] Your cert key is in: /root/.acme.sh/example.com/example.com.key
+[info] The intermediate CA cert is in: /root/.acme.sh/example.com/ca.cer
+[info] And the full chain certs is in: /root/.acme.sh/example.com/fullchain.cer
+```
+
+---
+
+## Step 7 — Install the Certificate into nginx's Certificate Store
+
+Copy the certificate files to the target location and register a reload hook so nginx picks up future renewals automatically:
+
+```bash
+sudo acme.sh --install-cert -d example.com \
+  --cert-file      /etc/ssl/lets-encrypt/example.com/cert \
+  --key-file       /etc/ssl/lets-encrypt/example.com/key \
+  --fullchain-file /etc/ssl/lets-encrypt/example.com/fullchain \
+  --reloadcmd      "systemctl reload nginx.service"
+```
+
+---
+
+## Step 8 — Reconfigure the Virtual Host for HTTPS
+
+Now that the certificate files exist, replace the temporary HTTP-only block with a full HTTPS configuration:
+
+```bash
+vim /etc/nginx/sites-available/example.com
+```
+
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com;
+
+    access_log /dev/null;
+    error_log /dev/null emerg;
+
+    include includes/lets-encrypt;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    ssl_ecdh_curve secp384r1;
+
+    ssl_certificate     /etc/ssl/lets-encrypt/example.com/cert;
+    ssl_certificate_key /etc/ssl/lets-encrypt/example.com/key;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers off;
+
+    ssl_session_cache   shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_session_tickets off;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /usr/share/nginx/html;
+        try_files $uri =404;
+        default_type "text/plain";
+    }
+
+    server_name example.com;
+    access_log  /var/log/nginx/access.log;
+    error_log   /var/log/nginx/error.log;
+
+    add_header X-Robots-Tag "index, follow" always;
+    add_header X-Content-Type-Options "nosniff";
+    add_header X-Frame-Options "SAMEORIGIN";
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|svg|ico|woff2?)$ {
+        expires 30d;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        try_files $uri =404;
+    }
+
+    location = /sitemap-index.xml {
+        try_files $uri =404;
+    }
+
+    root  /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml;
+}
+```
+
+Validate and reload:
+
+```bash
+sudo nginx -t
+sudo service nginx reload
+```
+
+Visit `https://example.com` — the padlock should be green and the certificate should show **Let's Encrypt** as the issuer.
+
+---
+
+## Renewal
+
+acme.sh installs a cron job (or systemd timer) at installation time that attempts renewal every 60 days. Because `--reloadcmd` was provided in Step 7, nginx will automatically reload after each successful renewal — no manual action is required.
+
+To force a manual renewal:
+
+```bash
+sudo acme.sh --renew -d example.com --force
+```
+
+---
+
+## Quick-Reference Checklist
+
+| Step | Task | Fresh machine | Existing certs machine |
+|------|------|:---:|:---:|
+| 1 | Webroot setup (permissions) | ✅ | Skip if `/var/www/lets-encrypt/` exists |
+| 1 | Domain cert directory creation | ✅ | ✅ always required |
+| 2 | Create nginx ACME challenge include | ✅ | Skip if file exists |
+| 3 | Create HTTP-only virtual host | ✅ | ✅ (new domain) |
+| 4 | Install acme.sh (as root) | ✅ | Skip |
+| 5 | Bootstrap acme.sh (CA + auto-upgrade) | ✅ | Skip |
+| 6 | Issue certificate (as root) | ✅ | ✅ |
+| 7 | Install cert into nginx store (as root) | ✅ | ✅ |
+| 8 | Reconfigure virtual host for HTTPS | ✅ | ✅ |

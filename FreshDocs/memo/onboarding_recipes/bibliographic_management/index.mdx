@@ -56,7 +56,7 @@ Only key recommended settings are described here; other options may be adjusted 
 #### Software Settings
 
 1. In the **General** tab, you may change the default tools used to open PDFs/EPUBs/Snapshots. Zotero is used by default.
-2. It is recommended to enable cloud synchronization. In the **Sync** tab, register or log in with your Zotero account. By default, Zotero syncs both metadata and attachment files. Since free accounts have limited storage, we strongly recommend **disabling attachment file syncing to Zotero's cloud** and instead using an external cloud service (see Step 2).
+2. It is recommended to enable cloud synchronization. In the **Sync** tab, register or log in with your Zotero account. By default, Zotero syncs both metadata and attachment files. Our team convention is to use **OneDrive (or another personal cloud drive) for attachments in My Library**, while keeping **Zotero storage enabled for Group Libraries** so that shared papers remain available to the whole team (see Step 2).
 
 #### Plugin Settings
 
@@ -136,14 +136,20 @@ Open the **Translate** tab and configure as follows:
 
 ### Step 2: Configure Cloud Storage (Optional)
 
-Zotero's built-in cloud storage is limited, and attachment files (PDFs, snapshots) consume most of the space, while metadata itself is lightweight. To avoid storage limits and keep attachments synchronized across devices, we recommend using an external cloud service such as OneDrive.
+Zotero's built-in cloud storage is limited, and attachment files (PDFs, snapshots) consume most of the space, while metadata itself is lightweight. To balance personal flexibility with team-wide sharing, our recommended setup is:
+
+- Use **OneDrive** (or another personal cloud drive) to synchronize attachment files in **My Library**.
+- Use **Zotero storage** for **Group Libraries**, so that shared papers and their attachments remain available to all group members.
+
+This separation works well in practice: your personal library stays under your own cloud account, while the lab can maintain a stable shared literature pool inside the Zotero Group.
 
 Example using OneDrive (other services follow similar logic):
 
-1. Open **Settings → Sync**, and disable both:
-   - *Sync attachment files in My Library using Zotero storage*
-   - *Sync attachment files in group libraries using Zotero storage*
-2. Move Zotero's `storage` directory to a folder within OneDrive (e.g., `C:\Users\Fresher\OneDrive\Zotero`).  
+1. Open **Settings → Sync**, and configure file sync as follows:
+   - Keep *Sync attachment files in My Library using Zotero storage* **disabled**.
+   - Keep *Sync attachment files in group libraries using Zotero storage* **enabled**.
+   - In **Choose Libraries...**, include the Group Libraries you actually need. If you belong to multiple groups, you may leave unrelated ones unchecked.
+2. Move Zotero's local `storage` directory to a folder within OneDrive (e.g., `C:\Users\Fresher\OneDrive\Zotero`).  
    If another device is already synced, skip this step, close Zotero, delete the local `storage` folder, and proceed to the next step.
 3. Create a directory junction (Windows example; use equivalent symlink commands on macOS/Linux):
 
@@ -155,7 +161,9 @@ Example using OneDrive (other services follow similar logic):
    ln -s /path/to/your/OneDrive/Zotero/storage /path/to/your/Programs/Zotero/storage
    ```
 
-After this, all attachments and notes will remain synchronized across devices.
+After this, files in your personal library will be synchronized through OneDrive, while files in Group Libraries will continue to be synchronized through Zotero storage.
+
+Under this setup, shared papers in the Group Library can still be selectively copied into your personal library by drag-and-drop. This allows students and researchers to keep a curated personal collection while also contributing valuable references back to the Group Library when appropriate.
 
 ---
 
@@ -181,7 +189,8 @@ For collaborative citation sharing (It is recommended to configure Cloud Storage
 
 1. Provide your Zotero account username or registered email to your advisor or group administrator.
 2. Once invited, you will see the shared **Group Libraries** in the left panel.
-3. Add papers you have read or found useful to the Group Library, ensuring accurate metadata and appropriate tags.
+3. You may drag useful papers from the Group Library into your personal library if you want to keep your own curated subset.
+4. Add papers you have read or found useful to the Group Library, ensuring accurate metadata and appropriate tags, so the whole team can benefit from them.
 
 The shared library accelerates citation reuse and preserves the collective research memory of the team.
 
@@ -191,4 +200,4 @@ The shared library accelerates citation reuse and preserves the collective resea
 
 Zotero, combined with Better BibTeX and PDF Translate, forms a **lab-standard literature environment** that is reproducible, searchable, and collaboration-friendly.
 
-With optional OneDrive synchronization and shared Group Libraries, every team member contributes to a continuously evolving citation ecosystem.
+With OneDrive for personal libraries and Zotero storage for shared Group Libraries, every team member can maintain a flexible personal workflow while contributing to a continuously evolving citation ecosystem for the lab.
