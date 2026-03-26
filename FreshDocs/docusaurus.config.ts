@@ -3,6 +3,8 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import {writeFileSync} from 'node:fs';
 import {join} from 'node:path';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
 import {createAdvancedSchemaPlugin} from './scripts/advancedSchemaPlugin';
 
 const publicRepoUrl = process.env.PUBLIC_REPO_URL ?? 'https://github.com/Yangs-AI/Fresh';
@@ -86,6 +88,13 @@ const config: Config = {
     },
   },
 
+  stylesheets: [
+    {
+      href: 'https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css',
+      type: 'text/css',
+    },
+  ],
+
   presets: [
     [
       '@docusaurus/preset-classic',
@@ -161,6 +170,8 @@ const config: Config = {
         id: 'memo',
         path: 'memo',
         editUrl: publicEditUrl,
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex],
         sidebarPath: './sidebarsMemo.ts',
         routeBasePath: 'memo',
         disableVersioning: false,
@@ -173,6 +184,8 @@ const config: Config = {
         id: 'news',
         path: 'news',
         editUrl: publicEditUrl,
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex],
         blogTitle: 'News',
         routeBasePath: 'news',
         showReadingTime: true,
