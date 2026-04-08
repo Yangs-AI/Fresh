@@ -6,10 +6,51 @@ type ContentRoot = 'memo' | 'news';
 
 const contentRoots: ContentRoot[] = ['memo', 'news'];
 const markdownExtensions = new Set(['.md', '.mdx']);
+
 const alwaysIncludeRootFiles: Record<ContentRoot, string[]> = {
   memo: [],
   news: ['authors.yml', 'tags.yml'],
 };
+
+// --- Sync package.json to package-public.json ---
+async function syncPackageJson() {
+  const pkgPath = path.join(workspaceRoot, 'package.json');
+  const pkgPublicPath = path.join(workspaceRoot, 'package-public.json');
+  let pkg, pkgPublic;
+  try {
+    pkg = JSON.parse(await fs.readFile(pkgPath, 'utf-8'));
+  } catch (e) {
+    console.warn('[prepare-public] Cannot read package.json:', e);
+    return;
+  }
+  try {
+    pkgPublic = JSON.parse(await fs.readFile(pkgPublicPath, 'utf-8'));
+  } catch {
+    pkgPublic = {};
+  }
+  // 字段同步列表
+  const fields = ['dependencies', 'devDependencies', 'browserslist', 'engines'];
+  for (const field of fields) {
+    if (pkg[field]) {
+      pkgPublic[field] = pkg[field];
+    } else {
+      delete pkgPublic[field];
+    }
+  }
+  // 可选：同步 version
+  if (pkg.version) pkgPublic.version = pkg.version;
+  // 可选：同步 name
+  if (pkgPublic.name && typeof pkgPublic.name === 'string') {
+    // 保持 package-public.json 的 name 不变
+  } else if (pkg.name) {
+    pkgPublic.name = pkg.name + '-Public';
+  }
+  // 保持 private 字段
+  if (typeof pkg.private !== 'undefined') pkgPublic.private = pkg.private;
+  // 写回
+  await fs.writeFile(pkgPublicPath, JSON.stringify(pkgPublic, null, 2) + '\n', 'utf-8');
+  console.log('[prepare-public] Synced dependencies to package-public.json');
+}
 
 const workspaceRoot = process.cwd();
 const outputRoot = path.join(workspaceRoot, '.public');
@@ -207,6 +248,7 @@ async function prepareRoot(rootName: ContentRoot): Promise<void> {
 }
 
 async function run(): Promise<void> {
+  await syncPackageJson();
   await fs.rm(outputRoot, {recursive: true, force: true});
   await fs.mkdir(outputRoot, {recursive: true});
 
