@@ -39,46 +39,36 @@ FreshDocs/
 We warmly welcome contributions from the research community!  
 If you have a useful visualization snippet, LaTeX code, or writing assets, you can easily add it to Fresh.
 
-### Step-by-Step Guide
 
-1. **Fork** this repository to your own GitHub account.  
-2. **Clone** your fork locally:
-   ```bash
-   git clone https://github.com/<your-username>/Fresh.git
-   ```
-3. **Create a new branch** for your contribution:
-   ```bash
-   git checkout -b new-feature
-   ```
-4. Enter the documentation workspace and install dependencies (For more details, see [Guide](./FreshDocs/README.md):
-   ```bash
-   cd FreshDocs
-   npm install
-   ```
-5. **Add your new content** under the appropriate directory, e.g.:
-   ```
-   FreshDocs/memo/visualization_recipes/vilion_plot/
-   ```
-   Each entry should include:
-   - `README.md` describing usage and references
-   - Example code
-   - Citation or original source if applicable
-6. Preview your contribution locally to ensure it builds correctly:
-   ```bash
-   npm run start
-   ```
-   This command launches a local Docusaurus development server so you can check that your new content renders properly.
-7. Commit and push your changes:
-   ```bash
-   git add .
-   git commit -m "Add: new visualization component for dataset analysis"
-   git push origin new-feature
-   ```
-8. **Open a Pull Request** back to `main`:
-   - Provide a short, descriptive title.
-   - Include context and reference if relevant.
+### Important Notice: Mirror Repository – Contribution Workflow
 
-Once reviewed, your contribution will become part of the Fresh library.
+This repository is a **read-only mirror** for public browsing and sharing. You **cannot** contribute directly via Pull Requests (PRs) to this repository.
+
+#### How to Contribute or Participate
+
+If you wish to contribute content, suggest improvements, or participate in development, please follow these steps:
+
+1. **Submit Suggestions or Issues**
+   - Use the **Issues** or **Discussions** section of this repository to submit your suggestions, report problems, or share new content ideas.
+   - Please provide as much detail as possible, including usage examples, references, or source links if applicable.
+
+2. **Request to Join the Main (Secret) Repository**
+   - If you are interested in active development or direct contribution, you may apply to join the main (private) repository.
+   - To request access, please contact us via the provided email, fill out the application form (if available), or leave a message in an Issue. We will review your request and respond promptly.
+
+3. **Review and Integration**
+   - Our team will review all submissions and suggestions from Issues/Discussions.
+   - If your contribution is accepted, we will help organize, refine, and integrate it into the main repository.
+   - You will be credited for your contribution where appropriate.
+
+#### Why This Workflow?
+
+This mirror repository is intended for open sharing and transparency, while the main repository is used for active development and quality control. This approach helps us:
+- Maintain the integrity and security of the main codebase
+- Ensure all contributions are properly reviewed and curated
+- Provide a clear channel for community feedback and participation
+
+Thank you for your interest and support! Every suggestion and contribution helps us build a better, more open research resource library.
 
 ---
 
