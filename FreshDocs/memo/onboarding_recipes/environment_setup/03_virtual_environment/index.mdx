@@ -3,7 +3,7 @@ title: Python Virtual Environments
 visibility: public
 ---
 
-:::info Authors
+:::info[Authors]
 
 Writing Idea by [Jason Young (Zhengxin Yang)](https://jason-young.me)  
 Originally Created by [Luzhou Peng](https://github.com/Zrsion)  
@@ -114,7 +114,7 @@ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh
 ```
 
-:::tip Running the installer in zsh
+:::tip[Running the installer in zsh]
 
 Running `bash Miniconda3-latest-Linux-x86_64.sh` from a zsh shell is safe. The script is executed by `bash`, independent of your current shell.
 
@@ -167,7 +167,7 @@ conda install numpy pandas matplotlib
 pip install some-package
 ```
 
-:::warning Mixing conda and pip
+:::warning[Mixing conda and pip]
 
 When possible, install packages via `conda` first, then use `pip` for packages not available in conda channels. This avoids dependency conflicts.
 
@@ -196,7 +196,7 @@ dependencies:
       - some-pip-package==1.0.0
 ```
 
-:::warning Cross-Platform Limitations
+:::warning[Cross-Platform Limitations]
 
 **`conda env export` includes platform-specific builds and may not work across different operating systems.**
 
@@ -318,7 +318,7 @@ If you need a specific Python version, call that interpreter directly:
 python3.11 -m venv .venv
 ```
 
-:::tip Python version selection with venv
+:::tip[Python version selection with venv]
 
 `venv` does not download Python. It uses the interpreter you invoke, so you must install the target Python version on your system first.
 
@@ -329,7 +329,7 @@ This creates a `.venv` directory containing:
 - `pip` and `setuptools`
 - An isolated `site-packages` directory
 
-:::tip Naming Convention
+:::tip[Naming Convention]
 
 Use `.venv` as the directory name. The leading dot makes it hidden by default, and the name is widely recognized by IDEs and tools.
 
@@ -399,7 +399,7 @@ pandas==2.0.2
 matplotlib==3.7.1
 ```
 
-:::tip Development vs. Production
+:::tip[Development vs. Production]
 
 Separate requirements into multiple files if needed:
 - `requirements.txt` – Production dependencies
@@ -407,7 +407,7 @@ Separate requirements into multiple files if needed:
 
 :::
 
-:::info Cross-Platform Reality Check
+:::info[Cross-Platform Reality Check]
 
 `requirements.txt` is portable for many projects, but it does **not** guarantee perfect cross-platform reproducibility.
 
