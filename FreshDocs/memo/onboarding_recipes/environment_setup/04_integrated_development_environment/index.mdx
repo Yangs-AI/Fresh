@@ -4,9 +4,11 @@ visibility: public
 ---
 
 :::info Authors
+
 Writing Idea by [Jason Young (Zhengxin Yang)](https://jason-young.me)  
 Originally Created by [Luzhou Peng](https://github.com/Zrsion)  
 Generated and Polished by [ChatGPT](https://chat.openai.com)
+
 :::
 
 This section guides you through setting up **Visual Studio Code** as your integrated development environment. You'll configure remote development, Python tooling, and workspace settings to work seamlessly with the shell and virtual environment layers you've already set up.
@@ -275,6 +277,7 @@ Create `.vscode/settings.json` in your project root:
 ```
 
 :::tip Cross-Device Compatibility
+
 **`.vscode/` configuration files are fully cross-device compatible.**
 
 - ✅ Commit `.vscode/settings.json`, `launch.json`, `tasks.json`, `extensions.json`
@@ -284,6 +287,7 @@ Create `.vscode/settings.json` in your project root:
 - ⚠️ Some extensions may need to be installed separately in WSL vs local
 
 **Commit `.vscode/settings.json` to version control to share configuration with your team.**
+
 :::
 
 ---
@@ -384,8 +388,10 @@ Create `.vscode/launch.json` for debugging:
 ```
 
 :::tip Module mode
+
 The `"module"` field runs a module with `python -m <module>`. For example, set
 `"module": "my_pkg.cli"` to run `python -m my_pkg.cli` instead of a file path.
+
 :::
 
 **Using the debugger:**

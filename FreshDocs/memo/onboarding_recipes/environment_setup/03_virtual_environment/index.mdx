@@ -4,9 +4,11 @@ visibility: public
 ---
 
 :::info Authors
+
 Writing Idea by [Jason Young (Zhengxin Yang)](https://jason-young.me)  
 Originally Created by [Luzhou Peng](https://github.com/Zrsion)  
 Generated and Polished by [ChatGPT](https://chat.openai.com)
+
 :::
 
 This section guides you through setting up **Python virtual environments** to isolate project dependencies. You'll learn to use **`conda`** (recommended, strong Python version and binary dependency management) or **`venv` + `pip`** (optional, minimal and widely supported) for managing Python versions and packages on a per-project basis.
@@ -113,7 +115,9 @@ bash Miniconda3-latest-Linux-x86_64.sh
 ```
 
 :::tip Running the installer in zsh
+
 Running `bash Miniconda3-latest-Linux-x86_64.sh` from a zsh shell is safe. The script is executed by `bash`, independent of your current shell.
+
 :::
 
 Follow the prompts, then initialize conda for your shell:
@@ -164,7 +168,9 @@ pip install some-package
 ```
 
 :::warning Mixing conda and pip
+
 When possible, install packages via `conda` first, then use `pip` for packages not available in conda channels. This avoids dependency conflicts.
+
 :::
 
 ---
@@ -191,6 +197,7 @@ dependencies:
 ```
 
 :::warning Cross-Platform Limitations
+
 **`conda env export` includes platform-specific builds and may not work across different operating systems.**
 
 **For cross-platform compatibility, use:**
@@ -218,6 +225,7 @@ conda env export --from-history > environment.yml
 ```
 
 Commit `environment.yml` to version control. Keep `environment-lock.yml` for exact reproduction on the same platform.
+
 :::
 
 **Or use `requirements.txt` for pip packages only:**
@@ -311,7 +319,9 @@ python3.11 -m venv .venv
 ```
 
 :::tip Python version selection with venv
+
 `venv` does not download Python. It uses the interpreter you invoke, so you must install the target Python version on your system first.
+
 :::
 
 This creates a `.venv` directory containing:
@@ -320,7 +330,9 @@ This creates a `.venv` directory containing:
 - An isolated `site-packages` directory
 
 :::tip Naming Convention
+
 Use `.venv` as the directory name. The leading dot makes it hidden by default, and the name is widely recognized by IDEs and tools.
+
 :::
 
 ---
@@ -388,12 +400,15 @@ matplotlib==3.7.1
 ```
 
 :::tip Development vs. Production
+
 Separate requirements into multiple files if needed:
 - `requirements.txt` – Production dependencies
 - `requirements-dev.txt` – Development tools (pytest, black, etc.)
+
 :::
 
 :::info Cross-Platform Reality Check
+
 `requirements.txt` is portable for many projects, but it does **not** guarantee perfect cross-platform reproducibility.
 
 - ✅ Works well for pure Python packages
@@ -407,6 +422,7 @@ requirements-linux.txt
 requirements-macos.txt
 requirements-windows.txt
 ```
+
 :::
 
 ---

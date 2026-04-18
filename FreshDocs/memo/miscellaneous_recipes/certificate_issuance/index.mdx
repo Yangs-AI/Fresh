@@ -10,7 +10,9 @@ visibility: public
 This guide walks through obtaining a free TLS certificate via **[acme.sh](https://github.com/acmesh-official/acme.sh)** from **Let's Encrypt**, using **nginx** as the web server. The example domain throughout is `example.com` — replace it with your own domain wherever you see it.
 
 :::danger Run acme.sh as root
+
 acme.sh must be installed and all subsequent `acme.sh` commands must be executed as **root** (or with `sudo -i` to open a root shell first). Running as a non-root user will fail when writing to `/etc/ssl/` and when reloading nginx.
+
 :::
 
 ---
@@ -26,8 +28,10 @@ acme.sh must be installed and all subsequent `acme.sh` commands must be executed
 ## Identifying Your Starting Point
 
 :::tip Before you begin — two scenarios
+
 - **Fresh machine**: nginx has no TLS config yet, acme.sh is not installed. Follow all steps in order.
 - **Machine with existing certificates**: nginx is already serving HTTPS for other domains and acme.sh is already installed. In Step 1, only the **domain-specific cert directory** needs to be created (the webroot setup can be skipped). Steps 2, 4, and 5 can also be skipped. Jump to [Step 3](#step-3--create-an-http-only-virtual-host-for-the-new-domain) after creating the cert directory.
+
 :::
 
 ---
@@ -51,11 +55,13 @@ mkdir -p /etc/ssl/lets-encrypt/example.com/
 ```
 
 :::note For machines with existing certificates
+
 The webroot `/var/www/lets-encrypt/` and its permissions are almost certainly already set up. Verify:
 ```bash
 ls /var/www/lets-encrypt/
 ```
 If the directory exists, skip the webroot block above. **Do not skip** the `mkdir` for `/etc/ssl/lets-encrypt/example.com/` — that directory is new for every domain.
+
 :::
 
 ---
@@ -81,11 +87,13 @@ location /.well-known/acme-challenge/ {
 ```
 
 :::note For machines with existing certificates
+
 The `/etc/nginx/includes/lets-encrypt` file is almost certainly already present. Verify:
 ```bash
 ls /etc/nginx/includes/lets-encrypt
 ```
 If it exists, skip Step 2 and proceed to Step 3.
+
 :::
 
 ---
@@ -121,7 +129,9 @@ sudo service nginx reload
 ```
 
 :::warning `default` listener conflict
+
 If another virtual host already uses `listen 80 default`, remove the `default` keyword from the block above — only one virtual host may claim the default server per address. On machines with existing certificates this is almost always the case, so use plain `listen 80;` as shown.
+
 :::
 
 ---
@@ -129,7 +139,9 @@ If another virtual host already uses `listen 80 default`, remove the `default` k
 ## Step 4 — Install acme.sh
 
 :::note For machines with existing certificates
+
 acme.sh is almost certainly already installed. Check with `sudo acme.sh --version`. If it exists, skip this step entirely.
+
 :::
 
 Run as **root** (or open a root shell with `sudo -i` first):
@@ -145,7 +157,9 @@ After installation, open a new shell (or `source /root/.bashrc`) so that the `ac
 ## Step 5 — Bootstrap acme.sh
 
 :::note For machines with existing certificates
+
 These global settings only need to be applied once per machine. They persist in `/root/.acme.sh/account.conf`. Skip this step if acme.sh was already configured.
+
 :::
 
 Enable auto-upgrade so acme.sh keeps itself current:
