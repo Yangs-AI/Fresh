@@ -170,6 +170,43 @@ Open the **Translate** tab and configure as follows:
    - Set *Dictionary Service* to **Collins Dict (en→zh)** or **FreeDictionaryAPI (en→en)**.
 3. Keep other options at their default values unless specific customization is required.
 
+##### Zotero Google Scholar Citation Count
+
+After installing **[Google Scholar Citation Count](https://github.com/justinribeiro/zotero-google-scholar-citation-count)**, add the **Citation Count** column in the Zotero item list (right-click the column header area to enable it).
+
+When a new paper is saved, the plugin automatically attempts to fetch citation counts from Google Scholar. This makes it easier to estimate paper visibility and helps prioritize reading.
+
+If citation counts cannot be fetched due to network restrictions, configure a custom Google Scholar endpoint in the plugin settings.
+
+##### Zotero Reading List
+
+After installing **[Zotero Reading List](https://github.com/Dominic-DallOsto/zotero-reading-list)**, we recommend this workflow-oriented setup:
+
+1. Enable *Automatically label new items when you add them to Zotero* and set the default label to **New**.
+2. Enable *Automatically change the read status of items when opening an attached file*.
+3. In *Custom Status Changes When Opening Item*, add these mappings:
+   - **New** → **In Progress**
+   - **To Read** → **In Progress**
+
+Recommended workflow:
+
+- Newly added papers start as **New** by default.
+- If you decide a paper should be read later, manually change status to **To Read**.
+- When you open the attachment for actual reading, status moves to **In Progress** automatically.
+
+To make these markers visible in the main list, right-click the Zotero item list header and enable the **Read Status** column.
+
+##### Zotero Format Metadata (Displayed as Linter)
+
+After installing **[Zotero Format Metadata](https://github.com/northword/zotero-format-metadata)**, it may appear as **Linter** in the plugin page.
+
+There is currently no mandatory configuration for our team. The main value is batch-formatting metadata for selected references, such as normalizing date strings into ISO-style formats and cleaning inconsistent fields.
+
+Advanced option (optional): request a Semantic Scholar API key and connect it in plugin settings to potentially retrieve richer or more accurate metadata.
+
+Request form:
+https://www.semanticscholar.org/product/api#api-key-form
+
 ---
 
 ### Step 2: Configure Cloud Storage (Optional)
@@ -236,6 +273,6 @@ The shared library accelerates citation reuse and preserves the collective resea
 
 ### Summary
 
-Zotero, combined with Better BibTeX and PDF Translate, forms a **lab-standard literature environment** that is reproducible, searchable, and collaboration-friendly.
+Zotero, combined with Better BibTeX, PDF Translate, Reading List, Google Scholar Citation Count, and Format Metadata, forms a **lab-standard literature environment** that is reproducible, searchable, and collaboration-friendly.
 
 With OneDrive for personal libraries and Zotero storage for shared Group Libraries, every team member can maintain a flexible personal workflow while contributing to a continuously evolving citation ecosystem for the lab.
