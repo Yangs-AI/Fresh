@@ -10,7 +10,7 @@ Zotero (/zoʊˈtɛroʊ/) is a free and open-source reference management software
 
 ---
 
-### Overview
+## Overview
 
 This setup guide will help you:
 
@@ -20,16 +20,16 @@ This setup guide will help you:
 
 ---
 
-### Step 1: Install Zotero and Plugins
+## Step 1: Install Zotero and Plugins
 
-#### Installing Zotero
+### Installing Zotero
 
 Download and install the latest version of **[Zotero](https://www.zotero.org/download/)**, and follow the instructions to install the browser connector. Once installed, you can save references directly to your personal or group library by clicking the browser connector while browsing academic resources online.
 
 Within Zotero, you can organize references into different **collections** according to your needs. A single reference only needs to be added once to the library, but it can appear in multiple collections (internally stored once, with multiple logical references).
 
 
-#### Installing Zotero Plugins
+### Installing Zotero Plugins
 
 Zotero officially supports a wide range of plugins, listed at:
 https://www.zotero.org/support/plugins
@@ -54,51 +54,23 @@ In this guide, we recommend several high-frequency and team-enhancing plugins:
 To install these plugins, open Zotero and navigate to **Tools → Plugins**, then download the corresponding `.xpi` files from the plugin websites and drag them into the `Plugin Manager` window.
 
 Restart Zotero after installation.
----
-
-### Best Practices for Adding References to the Team Library
-
-To ensure the team library remains clean, reliable, and easy to maintain, please follow these guidelines when adding new references:
-
-1. **Always Use Official Sources**
-   - Add papers from their official publisher pages whenever possible (e.g., publisher website, arXiv, or conference/journal homepage).
-   - Ensure each entry includes a valid DOI (Digital Object Identifier) if available. Avoid adding items without DOIs unless absolutely necessary.
-   - For web resources, only add those that are essential and not available in formal publication venues. Avoid adding blog posts, random web pages, or non-peer-reviewed content unless specifically required for a project.
-
-2. **Metadata Quality**
-   - Double-check that metadata (title, authors, date, journal/conference, DOI, etc.) is accurate and complete. Use the **Zotero Format Metadata** plugin to standardize and clean up fields as needed.
-   - Avoid duplicate entries. Search the library before adding a new item.
-
-3. **Classification and Organization**
-   - Assign each reference to the most relevant collection(s). Use collections to group by topic, project, or purpose, but avoid excessive or overly granular classification.
-   - Maintain a balance: be diligent in classifying, but do not create too many small or redundant collections. Over-classification can make the library harder to navigate.
-   - Use tags for additional context or temporary grouping (e.g., "to-read", "important", "reviewed").
-
-4. **Group Library Etiquette**
-   - When adding to the Group Library, ensure the reference is useful for the whole team and not just for personal use.
-   - Add meaningful notes or tags if the reference is particularly important, controversial, or requires follow-up.
-
-5. **Regular Maintenance**
-   - Periodically review and clean up the library: remove duplicates, fix metadata, and reorganize collections as the team's focus evolves.
-
-By following these practices, we can keep the team library sustainable, searchable, and valuable for everyone.
 
 ---
 
-### Configuration
+## Step 2: Configure Zotero and Plugins
 
 All software and plugin settings can be found under **Edit → Settings**, which opens the `Zotero Settings` window. All tabs and options mentioned below refer to this interface.
 
 Only key recommended settings are described here; other options may be adjusted according to personal preferences.
 
-#### Software Settings
+### Software Settings
 
 1. In the **General** tab, you may change the default tools used to open PDFs/EPUBs/Snapshots. Zotero is used by default.
 2. It is recommended to enable cloud synchronization. In the **Sync** tab, register or log in with your Zotero account. By default, Zotero syncs both metadata and attachment files. Our team convention is to use **OneDrive (or another personal cloud drive) for attachments in My Library**, while keeping **Zotero storage enabled for Group Libraries** so that shared papers remain available to the whole team (see Step 2).
 
-#### Plugin Settings
+### Plugin Settings
 
-##### Better BibTeX for Zotero
+#### Better BibTeX for Zotero
 
 1. In the **Export** tab, set **Item Format** to **Better BibTeX** or **Better BibLaTeX**.
 
@@ -157,7 +129,7 @@ Only key recommended settings are described here; other options may be adjusted 
      - Do **not** enable *Automatically abbreviate journal title if none is set explicitly*.
      - Enable *Apply title-casing to titles* only if required by the target venue.
 
-##### Zotero PDF Translate
+#### Zotero PDF Translate
 
 Open the **Translate** tab and configure as follows:
 
@@ -170,7 +142,7 @@ Open the **Translate** tab and configure as follows:
    - Set *Dictionary Service* to **Collins Dict (en→zh)** or **FreeDictionaryAPI (en→en)**.
 3. Keep other options at their default values unless specific customization is required.
 
-##### Zotero Google Scholar Citation Count
+#### Zotero Google Scholar Citation Count
 
 After installing **[Google Scholar Citation Count](https://github.com/justinribeiro/zotero-google-scholar-citation-count)**, add the **Citation Count** column in the Zotero item list (right-click the column header area to enable it).
 
@@ -178,7 +150,7 @@ When a new paper is saved, the plugin automatically attempts to fetch citation c
 
 If citation counts cannot be fetched due to network restrictions, configure a custom Google Scholar endpoint in the plugin settings.
 
-##### Zotero Reading List
+#### Zotero Reading List
 
 After installing **[Zotero Reading List](https://github.com/Dominic-DallOsto/zotero-reading-list)**, we recommend this workflow-oriented setup:
 
@@ -196,7 +168,7 @@ Recommended workflow:
 
 To make these markers visible in the main list, right-click the Zotero item list header and enable the **Read Status** column.
 
-##### Zotero Format Metadata (Displayed as Linter)
+#### Zotero Format Metadata (Displayed as Linter)
 
 After installing **[Zotero Format Metadata](https://github.com/northword/zotero-format-metadata)**, it may appear as **Linter** in the plugin page.
 
@@ -209,7 +181,7 @@ https://www.semanticscholar.org/product/api#api-key-form
 
 ---
 
-### Step 2: Configure Cloud Storage (Optional)
+#### Optional: Configure Cloud Storage
 
 Zotero's built-in cloud storage is limited, and attachment files (PDFs, snapshots) consume most of the space, while metadata itself is lightweight. To balance personal flexibility with team-wide sharing, our recommended setup is:
 
@@ -242,7 +214,20 @@ Under this setup, shared papers in the Group Library can still be selectively co
 
 ---
 
-### Step 3: Quickly Add References
+## Step 3: Join the Group Library
+
+For collaborative citation sharing (It is recommended to configure Cloud Storage before this step.):
+
+1. Provide your Zotero account username or registered email to your advisor or group administrator.
+2. Once invited, you will see the shared **Group Libraries** in the left panel.
+3. You may drag useful papers from the Group Library into your personal library if you want to keep your own curated subset.
+4. Add papers you have read or found useful to the Group Library, ensuring accurate metadata and appropriate tags, so the whole team can benefit from them.
+
+The shared library accelerates citation reuse and preserves the collective research memory of the team.
+
+---
+
+## Step 4: Quickly Add References
 
 Install the **Zotero Connector** browser extension from:
 https://www.zotero.org/download/
@@ -256,22 +241,36 @@ To ensure references are saved into the correct collection:
 
 Note: Please ensure you access the correct paper via the correct DOI link.
 
+### Best Practices for Adding References to the Team Library
+
+To ensure the team library remains clean, reliable, and easy to maintain, please follow these guidelines when adding new references:
+
+1. **Always Use Official Sources**
+   - Add papers from their official publisher pages whenever possible (e.g., publisher website, arXiv, or conference/journal homepage).
+   - Ensure each entry includes a valid DOI (Digital Object Identifier) if available. Avoid adding items without DOIs unless absolutely necessary.
+   - For web resources, only add those that are essential and not available in formal publication venues. Avoid adding blog posts, random web pages, or non-peer-reviewed content unless specifically required for a project.
+
+2. **Metadata Quality**
+   - Double-check that metadata (title, authors, date, journal/conference, DOI, etc.) is accurate and complete. Use the **Zotero Format Metadata** plugin to standardize and clean up fields as needed.
+   - Avoid duplicate entries. Search the library before adding a new item.
+
+3. **Classification and Organization**
+   - Assign each reference to the most relevant collection(s). Use collections to group by topic, project, or purpose, but avoid excessive or overly granular classification.
+   - Maintain a balance: be diligent in classifying, but do not create too many small or redundant collections. Over-classification can make the library harder to navigate.
+   - Use tags for additional context or temporary grouping (e.g., "to-read", "important", "reviewed").
+
+4. **Group Library Etiquette**
+   - When adding to the Group Library, ensure the reference is useful for the whole team and not just for personal use.
+   - Add meaningful notes or tags if the reference is particularly important, controversial, or requires follow-up.
+
+5. **Regular Maintenance**
+   - Periodically review and clean up the library: remove duplicates, fix metadata, and reorganize collections as the team's focus evolves.
+
+By following these practices, we can keep the team library sustainable, searchable, and valuable for everyone.
+
 ---
 
-### Step 4: Join the Group Library
-
-For collaborative citation sharing (It is recommended to configure Cloud Storage before this step.):
-
-1. Provide your Zotero account username or registered email to your advisor or group administrator.
-2. Once invited, you will see the shared **Group Libraries** in the left panel.
-3. You may drag useful papers from the Group Library into your personal library if you want to keep your own curated subset.
-4. Add papers you have read or found useful to the Group Library, ensuring accurate metadata and appropriate tags, so the whole team can benefit from them.
-
-The shared library accelerates citation reuse and preserves the collective research memory of the team.
-
----
-
-### Summary
+## Summary
 
 Zotero, combined with Better BibTeX, PDF Translate, Reading List, Google Scholar Citation Count, and Format Metadata, forms a **lab-standard literature environment** that is reproducible, searchable, and collaboration-friendly.
 
