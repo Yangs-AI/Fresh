@@ -3,6 +3,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import {writeFileSync} from 'node:fs';
 import {join} from 'node:path';
+import {execSync} from 'node:child_process';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 import {createAdvancedSchemaPlugin} from './scripts/advancedSchemaPlugin';
@@ -56,6 +57,19 @@ const webPageSchema = {
     url: 'https://yangs.ai',
   },
 };
+
+function canReadGitMetadata(): boolean {
+  try {
+    // Docusaurus needs git metadata for showLastUpdate* fields.
+    execSync('git rev-parse --is-inside-work-tree', {stdio: 'ignore'});
+    execSync('git log -1 --format=%H -- memo/index.mdx', {stdio: 'ignore'});
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+const enableGitLastUpdate = canReadGitMetadata();
 
 const config: Config = {
   title: 'Fresh',
@@ -175,7 +189,7 @@ const config: Config = {
         sidebarPath: './sidebarsMemo.ts',
         routeBasePath: 'memo',
         disableVersioning: false,
-        showLastUpdateTime: true,
+        showLastUpdateTime: enableGitLastUpdate,
       },
     ],
     [
